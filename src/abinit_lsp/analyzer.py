@@ -130,7 +130,176 @@ def _analyze_text(path: Path, content: str) -> list[Diagnostic]:
                     confidence=0.55,
                 )
             )
+    diagnostics.extend(_check_duplicate_keywords(path, meaningful))
+    diagnostics.extend(_check_value_ranges(path, meaningful))
     diagnostics.extend(_domain_text_checks(path, content, meaningful))
+    return diagnostics
+
+
+def _check_duplicate_keywords(path: Path, meaningful: list[tuple[int, str]]) -> list[Diagnostic]:
+    """Warn about duplicate keyword definitions."""
+    seen: dict[str, int] = {}
+    diagnostics: list[Diagnostic] = []
+    for line_no, line in meaningful:
+        parts = line.split()
+        if not parts:
+            continue
+        token = parts[0].lower()
+        key = token  # track exact token (including dataset suffix)
+        if key in seen:
+            diagnostics.append(
+                Diagnostic(
+                    f"{CODE_PREFIX}020",
+                    "warning",
+                    f"duplicate keyword '{token}' (first defined on line {seen[key]})",
+                    str(path),
+                    line_no,
+                    suggested_fix={"kind": "remove_duplicate", "keyword": token},
+                    confidence=0.85,
+                )
+            )
+        else:
+            seen[key] = line_no
+    return diagnostics
+
+
+# Value range validation rules for specific keywords.
+_VALUE_RULES: dict[str, dict[str, object]] = {
+    "ecut": {
+        "min": 0,
+        "type": "float",
+        "positive": True,
+        "msg_positive": "ecut should be a positive value (plane-wave energy cutoff)",
+    },
+    "ecutsm": {"min": 0, "type": "float"},
+    "natom": {
+        "min": 1,
+        "type": "int",
+        "positive": True,
+        "msg_positive": "natom must be a positive integer (number of atoms)",
+    },
+    "nband": {"min": 1, "type": "int"},
+    "nstep": {"min": 1, "type": "int"},
+    "ntypat": {"min": 1, "type": "int"},
+    "ngkpt": {"min": 1, "type": "int_array"},
+    "kptopt": {"choices": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]},
+    "occopt": {"choices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]},
+    "optcell": {"choices": [0, 1, 2]},
+    "ixc": {"min": -100, "type": "int"},
+    "diemac": {"min": 1, "type": "float"},
+}
+
+
+def _check_value_ranges(path: Path, meaningful: list[tuple[int, str]]) -> list[Diagnostic]:
+    """Validate keyword values against known rules."""
+    diagnostics: list[Diagnostic] = []
+    for line_no, line in meaningful:
+        parts = line.split()
+        if len(parts) < 2:
+            continue
+        token = parts[0].lower()
+        # Strip dataset suffix for value rule lookup
+        base = re.sub(r"\d+$", "", token) if not token.isalpha() else token
+        rule = _VALUE_RULES.get(base) or _VALUE_RULES.get(token)
+        if not rule:
+            continue
+
+        values = parts[1:]
+
+        # Type check for int
+        expected_type = rule.get("type")
+        if expected_type == "int" and values:
+            try:
+                val = int(float(values[0]))
+                if float(values[0]) != val:
+                    diagnostics.append(
+                        Diagnostic(
+                            f"{CODE_PREFIX}030",
+                            "warning",
+                            f"keyword '{token}' expects an integer value, got '{values[0]}'",
+                            str(path),
+                            line_no,
+                            suggested_fix={
+                                "kind": "fix_value_type",
+                                "keyword": token,
+                                "value": str(val),
+                            },
+                            confidence=0.9,
+                        )
+                    )
+            except (ValueError, IndexError):
+                pass
+
+        # Positive check
+        if rule.get("positive") and values:
+            try:
+                fval = float(values[0])
+                if fval <= 0:
+                    msg_raw = rule.get(
+                        "msg_positive",
+                        f"keyword '{token}' should have a positive value",
+                    )
+                    msg = str(msg_raw)
+                    diagnostics.append(
+                        Diagnostic(
+                            f"{CODE_PREFIX}031",
+                            "warning",
+                            msg,
+                            str(path),
+                            line_no,
+                            suggested_fix={"kind": "fix_value_range", "keyword": token},
+                            confidence=0.9,
+                        )
+                    )
+            except (ValueError, IndexError):
+                pass
+
+        # Min value check
+        min_val_raw = rule.get("min")
+        if min_val_raw is not None and values:
+            try:
+                fval = float(values[0])
+                min_val = float(str(min_val_raw))
+                if fval < min_val:
+                    diagnostics.append(
+                        Diagnostic(
+                            f"{CODE_PREFIX}031",
+                            "warning",
+                            f"keyword '{token}' value {values[0]} is below minimum {min_val}",
+                            str(path),
+                            line_no,
+                            confidence=0.85,
+                        )
+                    )
+            except (ValueError, IndexError):
+                pass
+
+        # Choices check
+        choices_raw = rule.get("choices")
+        if choices_raw is not None and values:
+            choices: list[int] = [int(c) for c in choices_raw]  # type: ignore[attr-defined]
+            try:
+                fval = float(values[0])
+                if int(fval) == fval and int(fval) not in choices:
+                    diagnostics.append(
+                        Diagnostic(
+                            f"{CODE_PREFIX}032",
+                            "warning",
+                            f"keyword '{token}' value {int(fval)} is not in allowed choices: "
+                            f"{sorted(choices)}",
+                            str(path),
+                            line_no,
+                            suggested_fix={
+                                "kind": "fix_value_choice",
+                                "keyword": token,
+                                "choices": sorted(choices),
+                            },
+                            confidence=0.9,
+                        )
+                    )
+            except (ValueError, IndexError):
+                pass
+
     return diagnostics
 
 
