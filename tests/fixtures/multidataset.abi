@@ -1,0 +1,24 @@
+# Multi-dataset ABINIT input
+ndtset  2
+
+# Dataset 1: SCF
+ecut1   20.0
+nstep1  50
+toldfe1 1.0e-6
+
+# Dataset 2: relaxation
+ecut2   30.0
+optcell2 2
+tolmxf2 1.0e-5
+
+# Common
+natom   1
+typat   1
+znucl   14
+xred    0.0 0.0 0.0
+acell   10.26
+rprim   0.0 0.5 0.5
+        0.5 0.0 0.5
+        0.5 0.5 0.0
+kptopt  1
+ngkpt   2 2 2

@@ -1,0 +1,4 @@
+# Missing structure info
+ecut 30.0
+nstep 100
+toldfe 1.0e-8

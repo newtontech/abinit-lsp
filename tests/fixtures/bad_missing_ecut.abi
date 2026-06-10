@@ -1,0 +1,7 @@
+# Missing required cutoff energy variable
+nstep 100
+natom 1
+typat 1
+znucl 14
+xred 0.0 0.0 0.0
+acell 10.26
