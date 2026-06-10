@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "abinit-lsp"
+version = "0.1.0"
+description = "Language Server Protocol and CLI tools for ABINIT input files"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "newtontech" }]
+keywords = ["lsp", "language-server", "materials-science", "matmaster"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Editors :: Integrated Development Environments (IDE)",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.4.0",
+    "mypy>=1.8",
+]
+lsp = [
+    "pygls>=1.2.0",
+    "lsprotocol>=2023.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/newtontech/abinit-lsp"
+Issues = "https://github.com/newtontech/abinit-lsp/issues"
+
+[project.scripts]
+abinit-lsp = "abinit_lsp.cli:lsp_main"
+abinit-lint = "abinit_lsp.cli:lint_main"
+abinit-fmt = "abinit_lsp.cli:fmt_main"
+abinit-test = "abinit_lsp.cli:test_main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/abinit_lsp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
