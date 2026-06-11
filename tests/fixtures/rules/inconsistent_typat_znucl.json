@@ -1,0 +1,17 @@
+[
+  {
+    "code": "ABINIT103",
+    "column": 1,
+    "confidence": 0.95,
+    "evidence": [],
+    "file": "tests/fixtures/rules/inconsistent_typat_znucl.abi",
+    "line": 5,
+    "message": "typat value 3 is out of range [1, 2] defined by ntypat",
+    "severity": "error",
+    "suggested_fix": {
+      "kind": "fix_typat_value",
+      "ntypat": 2,
+      "value": "3"
+    }
+  }
+]

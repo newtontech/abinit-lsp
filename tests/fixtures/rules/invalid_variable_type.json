@@ -1,0 +1,28 @@
+[
+  {
+    "code": "ABINIT104",
+    "column": 1,
+    "confidence": 0.95,
+    "evidence": [],
+    "file": "tests/fixtures/rules/invalid_variable_type.abi",
+    "line": 2,
+    "message": "keyword 'ecut' expects a numeric value, got 'abc'",
+    "severity": "error",
+    "suggested_fix": null
+  },
+  {
+    "code": "ABINIT104",
+    "column": 1,
+    "confidence": 0.95,
+    "evidence": [],
+    "file": "tests/fixtures/rules/invalid_variable_type.abi",
+    "line": 3,
+    "message": "keyword 'natom' expects an integer value, got '2.5'",
+    "severity": "error",
+    "suggested_fix": {
+      "keyword": "natom",
+      "kind": "fix_value_type",
+      "value": "2"
+    }
+  }
+]

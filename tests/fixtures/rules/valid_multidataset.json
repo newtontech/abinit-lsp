@@ -1,0 +1,18 @@
+[
+  {
+    "code": "ABINIT101",
+    "column": 1,
+    "confidence": 0.72,
+    "evidence": [
+      "MVP rule derived from MatMaster execution contracts"
+    ],
+    "file": "tests/fixtures/rules/valid_multidataset.abi",
+    "line": 1,
+    "message": "ecut is a required variable for ABINIT calculations",
+    "severity": "warning",
+    "suggested_fix": {
+      "kind": "add_required_token",
+      "token": "ecut"
+    }
+  }
+]

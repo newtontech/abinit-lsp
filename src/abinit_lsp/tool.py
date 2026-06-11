@@ -22,9 +22,9 @@ def _file_type(path: Path) -> str:
 
 
 def _collect_diagnostics(path: Path) -> list[Any]:
-    from .analyzer import analyze_path
+    from .lint import lint_path
 
-    return list(analyze_path(path))
+    return list(lint_path(path))
 
 
 def check_path(path: Path) -> dict[str, Any]:

@@ -1,0 +1,18 @@
+[
+  {
+    "code": "ABINIT102",
+    "column": 1,
+    "confidence": 0.95,
+    "evidence": [
+      "ABINIT requires natom for any calculation with atoms"
+    ],
+    "file": "tests/fixtures/rules/missing_natom.abi",
+    "line": 1,
+    "message": "natom is required to define the crystal structure",
+    "severity": "error",
+    "suggested_fix": {
+      "kind": "add_required_token",
+      "token": "natom"
+    }
+  }
+]

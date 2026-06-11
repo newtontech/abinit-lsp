@@ -1,0 +1,23 @@
+[
+  {
+    "code": "ABINIT200",
+    "column": 1,
+    "confidence": 0.95,
+    "evidence": [
+      "SCF cycle did not converge within nstep iterations"
+    ],
+    "file": "tests/fixtures/logs/scf_not_converged.out",
+    "line": 13,
+    "message": "SCF convergence failure in ABINIT run",
+    "severity": "error",
+    "suggested_fix": {
+      "hints": [
+        "increase nstep",
+        "tighten tolerance (toldfe/tolvrs)",
+        "adjust diemix",
+        "check initial guess"
+      ],
+      "kind": "fix_scf_convergence"
+    }
+  }
+]
