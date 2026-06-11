@@ -49,9 +49,7 @@ def _empty_operation(path: Path, operation: str) -> dict[str, Any]:
         path=str(path),
         file_type=_file_type(path),
     )
-    payload["summary"][
-        "note"
-    ] = f"{operation} is reserved by the Diagnostic Engine v1 CLI contract"
+    payload["summary"]["note"] = f"{operation} is reserved by the Diagnostic Engine v1 CLI contract"
     return payload
 
 
@@ -68,14 +66,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.operation == "check":
         payload = check_path(args.path)
         print(json.dumps(payload, indent=2, sort_keys=True))
-        return (
-            1 if getattr(args, "fail_on_blocking", False) and not payload["ok"] else 0
-        )
-    print(
-        json.dumps(
-            _empty_operation(args.path, args.operation), indent=2, sort_keys=True
-        )
-    )
+        return 1 if getattr(args, "fail_on_blocking", False) and not payload["ok"] else 0
+    print(json.dumps(_empty_operation(args.path, args.operation), indent=2, sort_keys=True))
     return 0
 
 

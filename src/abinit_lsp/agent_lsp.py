@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from typing import Any
 from urllib.parse import urlparse
 
 from .rich_diagnostics import agent_check_payload
@@ -25,7 +26,7 @@ class AgentLSP:
     def from_path(cls, path: str | Path) -> AgentLSP:
         return cls(text=None, uri=Path(path).resolve().as_uri())
 
-    def check(self) -> dict:
+    def check(self) -> dict[str, Any]:
         parsed = urlparse(self.uri)
         if self.text is None and parsed.scheme == "file":
             return check_path(Path(parsed.path))
@@ -37,32 +38,24 @@ class AgentLSP:
             payload["uri"] = self.uri
             return payload
 
-    def context(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(
-            software=SOFTWARE, uri=self.uri, operation="context"
-        )
+    def context(self, line: int = 0, character: int = 0) -> dict[str, Any]:
+        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="context")
         payload["position"] = {"line": line, "character": character}
         return payload
 
-    def complete(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(
-            software=SOFTWARE, uri=self.uri, operation="complete"
-        )
+    def complete(self, line: int = 0, character: int = 0) -> dict[str, Any]:
+        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="complete")
         payload["position"] = {"line": line, "character": character}
         payload["items"] = []
         return payload
 
-    def hover(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(
-            software=SOFTWARE, uri=self.uri, operation="hover"
-        )
+    def hover(self, line: int = 0, character: int = 0) -> dict[str, Any]:
+        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="hover")
         payload["position"] = {"line": line, "character": character}
         payload["contents"] = None
         return payload
 
-    def symbols(self) -> dict:
-        payload = agent_check_payload(
-            software=SOFTWARE, uri=self.uri, operation="symbols"
-        )
+    def symbols(self) -> dict[str, Any]:
+        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="symbols")
         payload["items"] = []
         return payload
