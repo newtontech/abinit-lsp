@@ -44,6 +44,7 @@ abinit-lsp = "abinit_lsp.cli:lsp_main"
 abinit-lint = "abinit_lsp.cli:lint_main"
 abinit-fmt = "abinit_lsp.cli:fmt_main"
 abinit-test = "abinit_lsp.cli:test_main"
+abinit-lsp-tool = "abinit_lsp.tool:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/abinit_lsp"]
@@ -62,3 +63,4 @@ select = ["E", "F", "I", "B", "UP"]
 [tool.mypy]
 python_version = "3.10"
 strict = true
+
