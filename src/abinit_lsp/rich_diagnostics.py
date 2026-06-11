@@ -6,9 +6,9 @@ python-lsp-server-style provider boundary for agent-facing JSON consumers.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import asdict, is_dataclass
-from typing import Any, Iterable
-
+from typing import Any
 
 DIAGNOSTIC_ENGINE_VERSION = "1.0"
 DIAGNOSTIC_CATEGORIES = (
@@ -53,15 +53,35 @@ def infer_category(code: Any = None, message: str = "", source: str = "") -> str
     text = f"{code or ''} {message} {source}".lower()
     if any(token in text for token in ("syntax", "parse", "parser", "token", "utf-8")):
         return "syntax"
-    if any(token in text for token in ("unknown", "keyword", "section", "schema", "required")):
+    if any(
+        token in text
+        for token in ("unknown", "keyword", "section", "schema", "required")
+    ):
         return "schema"
-    if any(token in text for token in ("type", "enum", "value", "integer", "float", "logical")):
+    if any(
+        token in text
+        for token in ("type", "enum", "value", "integer", "float", "logical")
+    ):
         return "type/value"
-    if any(token in text for token in ("file", "path", "include", "basis", "pseudo", "potcar", "reference")):
+    if any(
+        token in text
+        for token in (
+            "file",
+            "path",
+            "include",
+            "basis",
+            "pseudo",
+            "potcar",
+            "reference",
+        )
+    ):
         return "cross-file reference"
     if any(token in text for token in ("deprecated", "style", "format", "indent")):
         return "style/deprecation"
-    if any(token in text for token in ("cutoff", "scf", "memory", "parallel", "runtime", "preflight")):
+    if any(
+        token in text
+        for token in ("cutoff", "scf", "memory", "parallel", "runtime", "preflight")
+    ):
         return "preflight/runtime-risk"
     return "semantic consistency"
 
@@ -140,9 +160,13 @@ def diagnostic_to_dict(
     """Convert legacy/dataclass/LSP diagnostics into the rich v1 contract."""
     legacy = _legacy_payload(diagnostic)
     code = legacy.get("code", _get_attr_or_item(diagnostic, "code", "diagnostic"))
-    source = legacy.get("source", _get_attr_or_item(diagnostic, "source", f"{software}-lsp"))
+    source = legacy.get(
+        "source", _get_attr_or_item(diagnostic, "source", f"{software}-lsp")
+    )
     message = legacy.get("message", _get_attr_or_item(diagnostic, "message", ""))
-    severity = severity_label(legacy.get("severity", _get_attr_or_item(diagnostic, "severity", None)))
+    severity = severity_label(
+        legacy.get("severity", _get_attr_or_item(diagnostic, "severity", None))
+    )
     confidence = float(legacy.get("confidence", 1.0) or 1.0)
     category = legacy.get("category") or infer_category(code, message, source)
     fix_hints = legacy.get("fix_hints")

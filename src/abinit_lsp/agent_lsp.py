@@ -18,11 +18,11 @@ class AgentLSP:
         self.uri = uri
 
     @classmethod
-    def from_text(cls, text: str, uri: str = "file:///input") -> "AgentLSP":
+    def from_text(cls, text: str, uri: str = "file:///input") -> AgentLSP:
         return cls(text=text, uri=uri)
 
     @classmethod
-    def from_path(cls, path: str | Path) -> "AgentLSP":
+    def from_path(cls, path: str | Path) -> AgentLSP:
         return cls(text=None, uri=Path(path).resolve().as_uri())
 
     def check(self) -> dict:
@@ -38,23 +38,31 @@ class AgentLSP:
             return payload
 
     def context(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="context")
+        payload = agent_check_payload(
+            software=SOFTWARE, uri=self.uri, operation="context"
+        )
         payload["position"] = {"line": line, "character": character}
         return payload
 
     def complete(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="complete")
+        payload = agent_check_payload(
+            software=SOFTWARE, uri=self.uri, operation="complete"
+        )
         payload["position"] = {"line": line, "character": character}
         payload["items"] = []
         return payload
 
     def hover(self, line: int = 0, character: int = 0) -> dict:
-        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="hover")
+        payload = agent_check_payload(
+            software=SOFTWARE, uri=self.uri, operation="hover"
+        )
         payload["position"] = {"line": line, "character": character}
         payload["contents"] = None
         return payload
 
     def symbols(self) -> dict:
-        payload = agent_check_payload(software=SOFTWARE, uri=self.uri, operation="symbols")
+        payload = agent_check_payload(
+            software=SOFTWARE, uri=self.uri, operation="symbols"
+        )
         payload["items"] = []
         return payload
