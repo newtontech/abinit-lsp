@@ -1,0 +1,9 @@
+ndtset 2
+ecut1 20.0
+ecut2 30.0
+optcell2 2
+natom 1
+typat 1
+znucl 14
+xred 0.0 0.0 0.0
+acell 10.26

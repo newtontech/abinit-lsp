@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from .analyzer import analyze_path, format_text
+from .lint import lint_path
 
 
 def lsp_main(argv: list[str] | None = None) -> int:
@@ -14,10 +14,120 @@ def lsp_main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.stdio:
         parser.error("only --stdio is currently supported")
-    print(
-        f"{'abinit-lsp'} scaffold: full JSON-RPC LSP is tracked in roadmap issues", file=sys.stderr
-    )
+    # Issue #7: stdio JSON-RPC smoke path
+    # Read JSON-RPC messages from stdin and respond on stdout
+    _stdio_smoke()
     return 0
+
+
+def _stdio_smoke() -> None:
+    """Minimal stdio JSON-RPC smoke implementation.
+
+    Reads Content-Length framed JSON-RPC messages from stdin,
+    responds to initialize and textDocument/diagnostic requests.
+    Other messages receive empty responses.
+    """
+    print(
+        f"abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr
+    )
+
+    try:
+        while True:
+            line = sys.stdin.readline()
+            if not line:
+                break
+            if line.startswith("Content-Length:"):
+                length = int(line.split(":")[1].strip())
+                # Read the blank line separator
+                sys.stdin.readline()
+                # Read the JSON body
+                body = sys.stdin.read(length)
+                try:
+                    msg = json.loads(body)
+                except json.JSONDecodeError:
+                    continue
+                response = _handle_rpc(msg)
+                if response is not None:
+                    _send_response(response)
+            elif line.strip():
+                # Try to parse as bare JSON (for testing)
+                try:
+                    msg = json.loads(line)
+                    response = _handle_rpc(msg)
+                    if response is not None:
+                        _send_response(response)
+                except json.JSONDecodeError:
+                    pass
+            if line.strip() == "":
+                break
+    except (EOFError, KeyboardInterrupt, OSError):
+        pass
+
+
+def _handle_rpc(msg: dict) -> dict | None:
+    """Handle a single JSON-RPC message."""
+    method = msg.get("method", "")
+    msg_id = msg.get("id")
+    params = msg.get("params", {})
+
+    if method == "initialize":
+        return {
+            "jsonrpc": "2.0",
+            "id": msg_id,
+            "result": {
+                "capabilities": {
+                    "textDocumentSync": 1,
+                    "completionProvider": {"triggerCharacters": []},
+                    "hoverProvider": True,
+                    "codeActionProvider": True,
+                },
+                "serverInfo": {
+                    "name": "abinit-lsp",
+                    "version": "0.1.0",
+                },
+            },
+        }
+
+    if method == "initialized":
+        return None  # notification, no response
+
+    if method == "shutdown":
+        return {"jsonrpc": "2.0", "id": msg_id, "result": None}
+
+    if method == "exit":
+        return None
+
+    if method == "textDocument/diagnostic":
+        uri = params.get("textDocument", {}).get("uri", "")
+        path_str = uri.replace("file://", "")
+        path = Path(path_str)
+        from .agent_api import check_and_serialize
+        try:
+            payload = check_and_serialize(path)
+        except Exception:
+            payload = {"diagnostics": []}
+        return {
+            "jsonrpc": "2.0",
+            "id": msg_id,
+            "result": {
+                "kind": "full",
+                "items": payload.get("diagnostics", []),
+            },
+        }
+
+    # Unknown method - return empty result
+    if msg_id is not None:
+        return {"jsonrpc": "2.0", "id": msg_id, "result": None}
+    return None
+
+
+def _send_response(response: dict) -> None:
+    """Send a JSON-RPC response with Content-Length framing."""
+    body = json.dumps(response)
+    header = f"Content-Length: {len(body)}\r\n\r\n"
+    sys.stdout.write(header)
+    sys.stdout.write(body)
+    sys.stdout.flush()
 
 
 def lint_main(argv: list[str] | None = None) -> int:
@@ -25,7 +135,7 @@ def lint_main(argv: list[str] | None = None) -> int:
     parser.add_argument("path", type=Path)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
-    diagnostics = analyze_path(args.path)
+    diagnostics = lint_path(args.path)
     if args.json:
         print(json.dumps([item.to_json() for item in diagnostics], indent=2, sort_keys=True))
     else:
@@ -37,6 +147,8 @@ def lint_main(argv: list[str] | None = None) -> int:
 
 
 def fmt_main(argv: list[str] | None = None) -> int:
+    from .analyzer import format_text
+
     parser = argparse.ArgumentParser(prog="abinit-fmt")
     parser.add_argument("-w", "--write", action="store_true", help="write files in place")
     parser.add_argument("files", nargs="+", type=Path)

@@ -1,0 +1,9 @@
+# Valid ABINIT input - should not trigger any error rules
+ecut 30.0
+natom 2
+ntypat 1
+typat 1 1
+znucl 14
+xred 0.0 0.0 0.0  0.25 0.25 0.25
+toldfe 1.0e-8
+nstep 100

@@ -1,0 +1,5 @@
+# Missing natom - should trigger ABINIT102
+ecut 30.0
+typat 1
+znucl 14
+xred 0.0 0.0 0.0

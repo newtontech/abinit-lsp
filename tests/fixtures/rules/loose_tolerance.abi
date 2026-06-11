@@ -1,0 +1,9 @@
+# Very loose toldfe and tolmxf
+ecut 30.0
+natom 1
+typat 1
+znucl 14
+xred 0.0 0.0 0.0
+toldfe 1.0e-2
+tolmxf 5.0e-2
+nstep 100

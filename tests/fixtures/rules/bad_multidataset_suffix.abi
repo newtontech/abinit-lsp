@@ -1,0 +1,9 @@
+# Dataset 3 exceeds ndtset=2
+ndtset 2
+ecut1 20.0
+ecut2 30.0
+ecut3 40.0
+natom 1
+typat 1
+znucl 14
+xred 0.0 0.0 0.0
