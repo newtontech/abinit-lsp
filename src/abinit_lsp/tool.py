@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .agent_operations import operation_path, with_capabilities
 from .rich_diagnostics import agent_check_payload
 
 SOFTWARE = "abinit"
@@ -40,17 +41,21 @@ def check_path(path: Path) -> dict[str, Any]:
     )
 
 
-def _empty_operation(path: Path, operation: str) -> dict[str, Any]:
-    payload = agent_check_payload(
+def _operation_payload(
+    path: Path,
+    operation: str,
+    line: int = 0,
+    character: int = 0,
+) -> dict[str, Any]:
+    return operation_path(
+        path,
+        operation,
         software=SOFTWARE,
-        uri=path.resolve().as_uri(),
-        operation=operation,
-        diagnostics=[],
-        path=str(path),
-        file_type=_file_type(path),
+        file_type_func=_file_type,
+        collect_diagnostics=_collect_diagnostics,
+        line=line,
+        character=character,
     )
-    payload["summary"]["note"] = f"{operation} is reserved by the Diagnostic Engine v1 CLI contract"
-    return payload
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -60,14 +65,27 @@ def main(argv: list[str] | None = None) -> int:
         sub = subparsers.add_parser(operation)
         sub.add_argument("path", type=Path)
         sub.add_argument("--format", choices=["json"], default="json")
+        sub.add_argument(
+            "--line",
+            type=int,
+            default=0,
+            help="0-based line for position-aware operations.",
+        )
+        sub.add_argument(
+            "--character",
+            type=int,
+            default=0,
+            help="0-based character for position-aware operations.",
+        )
         if operation == "check":
             sub.add_argument("--fail-on-blocking", action="store_true")
     args = parser.parse_args(argv)
     if args.operation == "check":
-        payload = check_path(args.path)
+        payload = with_capabilities(check_path(args.path), "check")
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 1 if getattr(args, "fail_on_blocking", False) and not payload["ok"] else 0
-    print(json.dumps(_empty_operation(args.path, args.operation), indent=2, sort_keys=True))
+    payload = _operation_payload(args.path, args.operation, args.line, args.character)
+    print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 
 
