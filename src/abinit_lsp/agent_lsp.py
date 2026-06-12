@@ -38,7 +38,7 @@ class AgentLSP:
             payload["uri"] = self.uri
             return with_capabilities(payload, "check")
 
-    def _operation(self, operation: str, line: int = 0, character: int = 0) -> dict:
+    def _operation(self, operation: str, line: int = 0, character: int = 0) -> dict[str, Any]:
         parsed = urlparse(self.uri)
         if self.text is None and parsed.scheme == "file":
             return operation_path(
@@ -66,14 +66,14 @@ class AgentLSP:
             payload["uri"] = self.uri
             return payload
 
-    def context(self, line: int = 0, character: int = 0) -> dict:
+    def context(self, line: int = 0, character: int = 0) -> dict[str, Any]:
         return self._operation("context", line, character)
 
-    def complete(self, line: int = 0, character: int = 0) -> dict:
+    def complete(self, line: int = 0, character: int = 0) -> dict[str, Any]:
         return self._operation("complete", line, character)
 
-    def hover(self, line: int = 0, character: int = 0) -> dict:
+    def hover(self, line: int = 0, character: int = 0) -> dict[str, Any]:
         return self._operation("hover", line, character)
 
-    def symbols(self) -> dict:
+    def symbols(self) -> dict[str, Any]:
         return self._operation("symbols")
