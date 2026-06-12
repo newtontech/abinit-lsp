@@ -177,6 +177,7 @@ class TestExplainRule:
 
     def test_all_rules_explainable(self) -> None:
         from abinit_lsp.lint import RULE_MANIFEST
+
         for rule in RULE_MANIFEST:
             result = explain_rule(rule.rule_id)
             assert result is not None, f"Missing explanation for {rule.rule_id}"

@@ -27,23 +27,79 @@ RULE_DUPLICATE_KEYWORD = "abinit.input.duplicate_keyword"
 
 # Type expectations for known keywords.
 _INT_KEYWORDS: set[str] = {
-    "natom", "nband", "nstep", "ntypat", "ndtset",
-    "kptopt", "occopt", "optcell",
+    "natom",
+    "nband",
+    "nstep",
+    "ntypat",
+    "ndtset",
+    "kptopt",
+    "occopt",
+    "optcell",
 }
 _FLOAT_KEYWORDS: set[str] = {
-    "ecut", "ecutsm", "toldfe", "tolmxf", "tolvrs",
-    "diemac", "diemix", "dilatmx",
+    "ecut",
+    "ecutsm",
+    "toldfe",
+    "tolmxf",
+    "tolvrs",
+    "diemac",
+    "diemix",
+    "dilatmx",
 }
 
 # Keywords that are known ABINIT variables (superset from completion.py).
 _KNOWN_BASES: set[str] = {
-    "acell", "amu", "autoparal", "chkprim", "diemac", "diemix", "dilatmx",
-    "dtset", "ecut", "ecutsm", "fband", "getden", "getwfk", "irdwfk",
-    "irdden", "iscf", "ixc", "jdtset", "kptopt", "natom", "nband", "ndtset",
-    "ngkpt", "nline", "npband", "npfft", "npkpt", "npsp", "nshiftk", "nstep",
-    "ntypat", "occopt", "optcell", "ppdirpath", "prtden", "prt1dm", "prtstd",
-    "prtvolf", "prtwf", "pseudos", "rprim", "shiftk", "toldfe", "tolmxf",
-    "tolvrs", "typat", "udtset", "usepaw", "xcart", "xred", "znucl",
+    "acell",
+    "amu",
+    "autoparal",
+    "chkprim",
+    "diemac",
+    "diemix",
+    "dilatmx",
+    "dtset",
+    "ecut",
+    "ecutsm",
+    "fband",
+    "getden",
+    "getwfk",
+    "irdwfk",
+    "irdden",
+    "iscf",
+    "ixc",
+    "jdtset",
+    "kptopt",
+    "natom",
+    "nband",
+    "ndtset",
+    "ngkpt",
+    "nline",
+    "npband",
+    "npfft",
+    "npkpt",
+    "npsp",
+    "nshiftk",
+    "nstep",
+    "ntypat",
+    "occopt",
+    "optcell",
+    "ppdirpath",
+    "prtden",
+    "prt1dm",
+    "prtstd",
+    "prtvolf",
+    "prtwf",
+    "pseudos",
+    "rprim",
+    "shiftk",
+    "toldfe",
+    "tolmxf",
+    "tolvrs",
+    "typat",
+    "udtset",
+    "usepaw",
+    "xcart",
+    "xred",
+    "znucl",
 }
 
 
@@ -60,36 +116,60 @@ class RuleInfo:
 
 RULE_MANIFEST: list[RuleInfo] = [
     RuleInfo(
-        RULE_MISSING_ECUT, "ABINIT101", "warning",
-        "ecut is a required variable for ABINIT calculations", "official",
+        RULE_MISSING_ECUT,
+        "ABINIT101",
+        "warning",
+        "ecut is a required variable for ABINIT calculations",
+        "official",
     ),
     RuleInfo(
-        RULE_MISSING_NATOM, "ABINIT102", "error",
-        "natom is required to define the crystal structure", "official",
+        RULE_MISSING_NATOM,
+        "ABINIT102",
+        "error",
+        "natom is required to define the crystal structure",
+        "official",
     ),
     RuleInfo(
-        RULE_INCONSISTENT_TYPAT_ZNUCL, "ABINIT103", "error",
-        "typat and znucl must be consistent with ntypat", "official",
+        RULE_INCONSISTENT_TYPAT_ZNUCL,
+        "ABINIT103",
+        "error",
+        "typat and znucl must be consistent with ntypat",
+        "official",
     ),
     RuleInfo(
-        RULE_INVALID_VARIABLE_TYPE, "ABINIT104", "error",
-        "variable value does not match the expected type", "official",
+        RULE_INVALID_VARIABLE_TYPE,
+        "ABINIT104",
+        "error",
+        "variable value does not match the expected type",
+        "official",
     ),
     RuleInfo(
-        RULE_BAD_MULTIDATASET_SUFFIX, "ABINIT105", "warning",
-        "dataset suffix exceeds ndtset", "official",
+        RULE_BAD_MULTIDATASET_SUFFIX,
+        "ABINIT105",
+        "warning",
+        "dataset suffix exceeds ndtset",
+        "official",
     ),
     RuleInfo(
-        RULE_LOOSE_TOLERANCE, "ABINIT106", "warning",
-        "convergence tolerance is too loose for reliable results", "official",
+        RULE_LOOSE_TOLERANCE,
+        "ABINIT106",
+        "warning",
+        "convergence tolerance is too loose for reliable results",
+        "official",
     ),
     RuleInfo(
-        RULE_UNKNOWN_KEYWORD, "ABINIT107", "warning",
-        "unknown or unsupported ABINIT keyword", "official",
+        RULE_UNKNOWN_KEYWORD,
+        "ABINIT107",
+        "warning",
+        "unknown or unsupported ABINIT keyword",
+        "official",
     ),
     RuleInfo(
-        RULE_DUPLICATE_KEYWORD, "ABINIT108", "warning",
-        "keyword is defined more than once", "official",
+        RULE_DUPLICATE_KEYWORD,
+        "ABINIT108",
+        "warning",
+        "keyword is defined more than once",
+        "official",
     ),
 ]
 
@@ -201,10 +281,7 @@ def check_inconsistent_typat_znucl(af: AbinitFile, path: Path) -> list[Diagnosti
                     Diagnostic(
                         code="ABINIT103",
                         severity="error",
-                        message=(
-                            f"znucl has {len(entry.values)} values but "
-                            f"ntypat={ntypat_val}"
-                        ),
+                        message=(f"znucl has {len(entry.values)} values but ntypat={ntypat_val}"),
                         file=str(path),
                         line=entry.line,
                         suggested_fix={
@@ -218,9 +295,7 @@ def check_inconsistent_typat_znucl(af: AbinitFile, path: Path) -> list[Diagnosti
 
     # Cross-check: if typat and znucl both present but ntypat missing, infer
     if typat_entries and znucl_entries and ntypat_val is None:
-        ntypat_inferred = (
-            len(znucl_entries[0].values) if znucl_entries[0].values else 0
-        )
+        ntypat_inferred = len(znucl_entries[0].values) if znucl_entries[0].values else 0
         if ntypat_inferred > 0:
             for entry in typat_entries:
                 for v in entry.values:
@@ -353,8 +428,7 @@ def check_bad_multidataset_suffix(af: AbinitFile, path: Path) -> list[Diagnostic
                     code="ABINIT105",
                     severity="warning",
                     message=(
-                        f"keyword '{entry.keyword}' has dataset suffix {ds} "
-                        f"but ndtset={ndtset}"
+                        f"keyword '{entry.keyword}' has dataset suffix {ds} but ndtset={ndtset}"
                     ),
                     file=str(path),
                     line=entry.line,
@@ -475,10 +549,7 @@ def check_unknown_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
                 Diagnostic(
                     code="ABINIT107",
                     severity="warning",
-                    message=(
-                        f"unknown or unsupported ABINIT keyword: "
-                        f"{entry.keyword}"
-                    ),
+                    message=(f"unknown or unsupported ABINIT keyword: {entry.keyword}"),
                     file=str(path),
                     line=entry.line,
                     suggested_fix={
@@ -502,10 +573,7 @@ def check_duplicate_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
                 Diagnostic(
                     code="ABINIT108",
                     severity="warning",
-                    message=(
-                        f"duplicate keyword '{key}' "
-                        f"(first defined on line {seen[key]})"
-                    ),
+                    message=(f"duplicate keyword '{key}' (first defined on line {seen[key]})"),
                     file=str(path),
                     line=entry.line,
                     suggested_fix={"kind": "remove_duplicate", "keyword": key},
@@ -530,8 +598,11 @@ def lint_file(path: Path) -> list[Diagnostic]:
     except UnicodeDecodeError:
         return [
             Diagnostic(
-                "ABINIT202", "error", "file is not valid UTF-8 text",
-                str(path), 1,
+                "ABINIT202",
+                "error",
+                "file is not valid UTF-8 text",
+                str(path),
+                1,
             )
         ]
 

@@ -33,10 +33,7 @@ class TestCodeActions:
 
     def test_valid_file_no_actions(self, tmp_path: Path) -> None:
         f = tmp_path / "test.abi"
-        f.write_text(
-            "ecut 30\nnatom 1\nntypat 1\ntypat 1\nznucl 14\n"
-            "xred 0 0 0\ntoldfe 1.0e-8\n"
-        )
+        f.write_text("ecut 30\nnatom 1\nntypat 1\ntypat 1\nznucl 14\nxred 0 0 0\ntoldfe 1.0e-8\n")
         actions = get_code_actions(f)
         assert len(actions) == 0
 

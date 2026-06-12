@@ -27,9 +27,7 @@ def _stdio_smoke() -> None:
     responds to initialize and textDocument/diagnostic requests.
     Other messages receive empty responses.
     """
-    print(
-        "abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr
-    )
+    print("abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr)
 
     try:
         while True:
@@ -102,6 +100,7 @@ def _handle_rpc(msg: dict) -> dict | None:
         path_str = uri.replace("file://", "")
         path = Path(path_str)
         from .agent_api import check_and_serialize
+
         try:
             payload = check_and_serialize(path)
         except Exception:
