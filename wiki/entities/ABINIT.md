@@ -61,6 +61,16 @@ abinit-lsp 项目为 ABINIT 输入文件提供 Language Server Protocol 支持�
 - [[znucl]] - 核电荷数
 - [[SCF]] - 自洽场循环
 
+## 官方参考 / Official References
+
+- ABINIT Homepage: <https://www.abinit.org/>
+- Input Variables: <https://docs.abinit.org/variables/>
+- Tutorials: <https://docs.abinit.org/tutorial/>
+- 参见: [[upstream-sources]] for complete variable index
+- 参见: [[diagnostic-engine-v1]] for LSP diagnostic codes
+- 参见: [[openqc-agent-context]] for agent integration
+
 ## 历史更新
 
 - 2026-06-12: 创建页面，基于 abinit-lsp 项目文档
+- 2026-06-13: 添加官方参考链接和交叉引用

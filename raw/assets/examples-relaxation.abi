@@ -1,0 +1,27 @@
+# Silicon FCC Geometry Optimization
+# Reference: ABINIT tutorial lesson 2 (https://docs.abinit.org/tutorial/base2/)
+# Uses ionmov + optcell for structural relaxation
+
+ecut     30.0
+nstep    200
+toldfe   1.0e-8
+tolmxf   1.0e-5
+optcell  0
+
+# FCC lattice
+acell    3*10.26
+rprim    0.0 0.5 0.5
+         0.5 0.0 0.5
+         0.5 0.5 0.0
+
+# Silicon atoms
+natom    2
+typat    1 1
+znucl    14
+xred     0.00 0.00 0.00
+         0.25 0.25 0.25
+
+# k-point sampling
+kptopt   1
+ngkpt    4 4 4
+diemac   12.0

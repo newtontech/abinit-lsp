@@ -3,6 +3,10 @@
 Provides documentation strings for keywords when hovering in an editor.
 Handles dataset-suffixed keywords (e.g. ``ecut1``) by looking up the base
 keyword.
+
+Source provenance: KEYWORD_DOCS entries trace to official ABINIT documentation
+at https://docs.abinit.org/variables/ . The wiki manifest at
+raw/assets/upstream-sources.md maps each variable to its canonical URL.
 """
 
 from __future__ import annotations

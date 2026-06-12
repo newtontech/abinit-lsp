@@ -91,6 +91,12 @@ xred 0.0 0.0 0.0
 2. `natom` 必须与坐标数组行数一致
 3. 对于给定的 `ntypat`，`typat` 中的类型索引必须在 [1, ntypat] 范围内
 
+## 官方参考 / Official Reference
+
+- ABINIT docs: <https://docs.abinit.org/variables/natom/>
+- 参见: [[upstream-sources]] for complete variable index
+
 ## 历史更新
 
 - 2026-06-12: 创建页面
+- 2026-06-13: 添加官方参考链接
