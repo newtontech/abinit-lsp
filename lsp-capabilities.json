@@ -1,0 +1,90 @@
+{
+  "schema": "OpenQCLspCapabilities",
+  "version": 1,
+  "id": "abinit-lsp",
+  "software": "abinit",
+  "displayName": "ABINIT",
+  "languageId": "abinit",
+  "executable": "abinit-lsp",
+  "defaultBranch": "main",
+  "filePatterns": [
+    "*.abi",
+    "*.abinit"
+  ],
+  "maturity": "stable",
+  "blockingPolicy": {
+    "mode": "blocking",
+    "description": "Error diagnostics block run-gate and Bohrium submission until resolved."
+  },
+  "capabilities": [
+    "agent-envelope",
+    "agent-json-cli",
+    "blocking-gate",
+    "completion",
+    "context",
+    "diagnostic-engine-v1",
+    "diagnostics",
+    "fix-placeholder",
+    "fix-preview",
+    "hover",
+    "llm-wiki",
+    "manifest",
+    "openqc-context",
+    "rich-diagnostics",
+    "routing",
+    "source-provenance",
+    "symbols"
+  ],
+  "agentCli": {
+    "command": "abinit-lsp-tool",
+    "operations": [
+      "capabilities",
+      "check",
+      "context",
+      "complete",
+      "hover",
+      "symbols",
+      "fix"
+    ],
+    "jsonFormat": true,
+    "failOnBlocking": true
+  },
+  "diagnosticSchema": "diagnostics/diagnostic-engine-v1.schema.json",
+  "wikiPaths": {
+    "plan": "docs/LLM-WIKI-PLAN.md",
+    "rawAssets": "raw/assets",
+    "entities": "wiki/entities",
+    "concepts": "wiki/concepts",
+    "synthesis": "wiki/synthesis",
+    "index": "index.md",
+    "log": "log.md"
+  },
+  "fixturePaths": {
+    "valid": [
+      "tests/fixtures/valid",
+      "test/fixtures/valid"
+    ],
+    "invalid": [
+      "tests/fixtures/invalid",
+      "test/fixtures/invalid"
+    ],
+    "logs": [
+      "tests/fixtures/logs",
+      "test/fixtures/logs"
+    ]
+  },
+  "outputLogPatterns": [],
+  "openqc": {
+    "registryId": "abinit-lsp",
+    "repoName": "abinit-lsp",
+    "contextContract": "DSLAuthoringContext",
+    "diagnosticEnvelope": "DiagnosticEnvelope/v1"
+  },
+  "sourceProvenance": [
+    {
+      "kind": "official_docs",
+      "label": "ABINIT Input Variables",
+      "url": "https://docs.abinit.org/variables/"
+    }
+  ]
+}
