@@ -10,10 +10,11 @@ from __future__ import annotations
 import importlib
 import inspect
 import re
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any, Callable
 
-from .rich_diagnostics import agent_check_payload, diagnostic_to_dict
+from .rich_diagnostics import agent_check_payload
 
 OPERATIONS = ("check", "context", "complete", "hover", "symbols", "fix")
 _WORD_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_.$%+-]*")
@@ -84,7 +85,11 @@ def operation_path(
             items = _generic_completion_items(text, payload["diagnostics"])
         payload["items"] = items
         status = "available" if items else "unavailable"
-        reason = None if items else "No completion provider or extractable symbols for this document."
+        reason = (
+            None
+            if items
+            else "No completion provider or extractable symbols for this document."
+        )
         return with_capabilities(payload, operation, status=status, reason=reason)
 
     if operation == "hover":
@@ -109,7 +114,11 @@ def operation_path(
         actions = _fix_actions(payload["diagnostics"], line=line, character=character)
         payload["actions"] = actions
         status = "available" if actions else "unavailable"
-        reason = None if actions else "No safe quick-fix hints are available for current diagnostics."
+        reason = (
+            None
+            if actions
+            else "No safe quick-fix hints are available for current diagnostics."
+        )
         return with_capabilities(payload, operation, status=status, reason=reason)
 
     return with_capabilities(
@@ -286,7 +295,10 @@ def _generic_completion_items(
     for diagnostic in diagnostics:
         for hint in diagnostic.get("fix_hints") or []:
             if isinstance(hint, str) and hint.strip():
-                labels.setdefault(hint.strip(), f"Fix hint for {diagnostic.get('code', 'diagnostic')}")
+                labels.setdefault(
+                    hint.strip(),
+                    f"Fix hint for {diagnostic.get('code', 'diagnostic')}",
+                )
         manual_ref = diagnostic.get("manual_ref")
         if isinstance(manual_ref, str) and manual_ref.strip():
             labels.setdefault(manual_ref.strip(), "Manual reference")

@@ -7,7 +7,6 @@ from tempfile import TemporaryDirectory
 from typing import Any
 from urllib.parse import urlparse
 
-from .rich_diagnostics import agent_check_payload
 from .agent_operations import operation_path, with_capabilities
 from .tool import SOFTWARE, _collect_diagnostics, _file_type, check_path
 
