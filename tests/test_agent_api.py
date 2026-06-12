@@ -49,7 +49,10 @@ class TestGetHover:
         result = get_hover("ecut")
         assert result["found"] is True
         assert result["documentation"] is not None
-        assert "cutoff" in result["documentation"].lower() or "energy" in result["documentation"].lower()
+        assert (
+            "cutoff" in result["documentation"].lower()
+            or "energy" in result["documentation"].lower()
+        )
 
     def test_unknown_keyword(self) -> None:
         result = get_hover("zzzzznotreal")

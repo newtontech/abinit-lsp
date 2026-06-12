@@ -17,7 +17,6 @@ from abinit_lsp.lint import (
     get_rule_manifest,
     lint_file,
     lint_path,
-    RULE_MANIFEST,
 )
 from abinit_lsp.parser import parse_content
 
@@ -92,7 +91,6 @@ class TestRule15MissingNatom:
 
     def test_fixture_matches_golden(self) -> None:
         diags = lint_file(RULE_FIXTURES / "missing_natom.abi")
-        golden = json.loads((RULE_FIXTURES / "missing_natom.json").read_text())
         codes = [d.code for d in diags]
         assert "ABINIT102" in codes
 
@@ -120,7 +118,6 @@ class TestRule16InconsistentTypatZnucl:
 
     def test_fixture_matches_golden(self) -> None:
         diags = lint_file(RULE_FIXTURES / "inconsistent_typat_znucl.abi")
-        golden = json.loads((RULE_FIXTURES / "inconsistent_typat_znucl.json").read_text())
         codes = [d.code for d in diags]
         assert "ABINIT103" in codes
 
