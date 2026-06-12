@@ -15,11 +15,11 @@ from pathlib import Path
 from typing import Any
 
 from .code_actions import get_code_actions
-from .completion import KEYWORD_DOCS, ALL_KEYWORDS, complete_keywords
+from .completion import ALL_KEYWORDS, KEYWORD_DOCS
 from .hover import get_hover_docs
-from .lint import get_rule_manifest, lint_file, lint_path
+from .lint import get_rule_manifest, lint_path
 from .log_parser import parse_log, parse_log_file
-from .rich_diagnostics import agent_check_payload, serialize_diagnostics
+from .rich_diagnostics import agent_check_payload
 
 SOFTWARE = "abinit"
 
