@@ -57,7 +57,11 @@ def operation_path(
     path = Path(path)
     file_type = file_type_func(path)
     text = _read_text(path)
-    diagnostics = _safe_collect_diagnostics(path, collect_diagnostics) if operation == "fix" else []
+    diagnostics = (
+        _safe_collect_diagnostics(path, collect_diagnostics)
+        if operation in {"context", "complete", "hover", "fix"}
+        else []
+    )
     payload = agent_check_payload(
         software=software,
         uri=path.resolve().as_uri(),
@@ -86,9 +90,7 @@ def operation_path(
         payload["items"] = items
         status = "available" if items else "unavailable"
         reason = (
-            None
-            if items
-            else "No completion provider or extractable symbols for this document."
+            None if items else "No completion provider or extractable symbols for this document."
         )
         return with_capabilities(payload, operation, status=status, reason=reason)
 
@@ -115,9 +117,7 @@ def operation_path(
         payload["actions"] = actions
         status = "available" if actions else "unavailable"
         reason = (
-            None
-            if actions
-            else "No safe quick-fix hints are available for current diagnostics."
+            None if actions else "No safe quick-fix hints are available for current diagnostics."
         )
         return with_capabilities(payload, operation, status=status, reason=reason)
 
@@ -170,8 +170,8 @@ def _context_for(text: str, position: dict[str, int]) -> dict[str, Any]:
             "start": {"line": line_no, "character": start},
             "end": {"line": line_no, "character": end},
         },
-        "before": lines[max(0, line_no - 3):line_no],
-        "after": lines[line_no + 1:line_no + 4],
+        "before": lines[max(0, line_no - 3) : line_no],
+        "after": lines[line_no + 1 : line_no + 4],
     }
 
 
@@ -197,9 +197,11 @@ def _diagnostics_at_position(
         end_line = int(end.get("line", start_line) or start_line)
         start_char = int(start.get("character", 0) or 0)
         end_char = int(end.get("character", start_char + 1) or (start_char + 1))
-        if start_line <= line <= end_line and (
-            line != start_line or character >= start_char
-        ) and (line != end_line or character <= end_char):
+        if (
+            start_line <= line <= end_line
+            and (line != start_line or character >= start_char)
+            and (line != end_line or character <= end_char)
+        ):
             selected.append(item)
     return selected
 
@@ -286,9 +288,7 @@ def _symbols_for(path: Path, text: str) -> list[dict[str, Any]]:
     return _generic_symbols(text)
 
 
-def _generic_completion_items(
-    text: str, diagnostics: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
+def _generic_completion_items(text: str, diagnostics: list[dict[str, Any]]) -> list[dict[str, Any]]:
     labels: dict[str, str] = {}
     for symbol in _generic_symbols(text):
         labels.setdefault(symbol["name"], symbol.get("detail", "Document symbol"))
@@ -412,7 +412,7 @@ def _call_provider(fn: Callable[..., Any], *values: Any) -> Any:
         if param.default is inspect.Parameter.empty
         and param.kind in (param.POSITIONAL_ONLY, param.POSITIONAL_OR_KEYWORD)
     ]
-    attempts: list[tuple[Any, ...]] = [(), values[:1], values[:2], values[:3]]
+    attempts: list[tuple[Any, ...]] = [(), values[:1], values[:2], values[:3], values[:4]]
     for args in attempts:
         if len(args) < len(required):
             continue
