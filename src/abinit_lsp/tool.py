@@ -17,7 +17,8 @@ def _capabilities_payload() -> dict[str, Any]:
     for parent in Path(__file__).resolve().parents:
         manifest_path = parent / "lsp-capabilities.json"
         if manifest_path.exists():
-            return json.loads(manifest_path.read_text(encoding="utf-8"))
+            payload: dict[str, Any] = json.loads(manifest_path.read_text(encoding="utf-8"))
+            return payload
     return {
         "schema": "OpenQCLspCapabilities",
         "version": 1,
@@ -33,7 +34,15 @@ def _capabilities_payload() -> dict[str, Any]:
             "openqc-context",
         ],
         "agentCli": {
-            "operations": ["capabilities", "check", "context", "complete", "hover", "symbols", "fix"],
+            "operations": [
+                "capabilities",
+                "check",
+                "context",
+                "complete",
+                "hover",
+                "symbols",
+                "fix",
+            ],
             "jsonFormat": True,
             "failOnBlocking": True,
         },

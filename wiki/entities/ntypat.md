@@ -94,6 +94,12 @@ typat 1 3 1 2  # 错误：3超出范围
 2. `typat` 中包含超出 [1, ntypat] 的索引
 3. `ntypat` 设置为 0
 
+## 官方参考 / Official Reference
+
+- ABINIT docs: <https://docs.abinit.org/variables/ntypat/>
+- 参见: [[upstream-sources]] for complete variable index
+
 ## 历史更新
 
 - 2026-06-12: 创建页面
+- 2026-06-13: 添加官方参考链接

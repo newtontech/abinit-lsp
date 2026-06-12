@@ -75,6 +75,13 @@ ecut 30.0
 3. 不同的赝势需要不同的 `ecut` 值
 4. 结构优化时可能需要稍高的 `ecut` 值
 
+## 官方参考 / Official Reference
+
+- ABINIT docs: <https://docs.abinit.org/variables/ecut/>
+- Tutorial: <https://docs.abinit.org/tutorial/base1/> (ecut convergence testing)
+- 参见: [[upstream-sources]] for complete variable index
+
 ## 历史更新
 
 - 2026-06-12: 创建页面
+- 2026-06-13: 添加官方参考链接和 LSP hover 文档来源

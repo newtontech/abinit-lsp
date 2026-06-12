@@ -85,6 +85,21 @@
       "kind": "official_docs",
       "label": "ABINIT Input Variables",
       "url": "https://docs.abinit.org/variables/"
+    },
+    {
+      "kind": "official_docs",
+      "label": "ABINIT Tutorials",
+      "url": "https://docs.abinit.org/tutorial/"
+    },
+    {
+      "kind": "official_docs",
+      "label": "ABINIT Theory",
+      "url": "https://docs.abinit.org/theory/"
+    },
+    {
+      "kind": "wiki_manifest",
+      "label": "ABINIT Upstream Sources Manifest",
+      "path": "raw/assets/upstream-sources.md"
     }
   ]
 }

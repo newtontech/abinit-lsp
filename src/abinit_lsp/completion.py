@@ -7,7 +7,8 @@ filtering and dataset-aware suggestions.
 from __future__ import annotations
 
 # Comprehensive keyword documentation for ABINIT.
-# Source: ABINIT documentation https://docs.abinit.org/
+# Source: ABINIT documentation https://docs.abinit.org/variables/
+# Manifest: raw/assets/upstream-sources.md maps each keyword to its canonical docs URL.
 KEYWORD_DOCS: dict[str, str] = {
     "acell": (
         "acell : Scale of the primitive vectors (in atomic units).\n"

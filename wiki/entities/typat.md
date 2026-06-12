@@ -95,6 +95,12 @@ typat 6*1
 - [ ] 所有 `typat` 值在 [1, ntypat] 范围内
 - [ ] `typat` 值与 [[znucl]] 定义的化学类型一致
 
+## 官方参考 / Official Reference
+
+- ABINIT docs: <https://docs.abinit.org/variables/typat/>
+- 参见: [[upstream-sources]] for complete variable index
+
 ## 历史更新
 
 - 2026-06-12: 创建页面
+- 2026-06-13: 添加官方参考链接

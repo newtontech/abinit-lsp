@@ -6,56 +6,51 @@ This wiki contains ABINIT domain knowledge organized by entity types, concepts, 
 
 - **[Raw Assets](raw/assets/)** - Source evidence files
 - **[Entities](wiki/entities/)** - ABINIT-specific entities (input variables, file formats)
-- **[Concepts](wiki/concepts/)** - Cross-cutting concepts (DFT, pseudopotentials, k-points)
-- **[Synthesis](wiki/synthesis/)** - API references and workflows
+- **[Concepts](wiki/concepts/)** - Cross-cutting concepts (diagnostics, DFT)
+- **[Synthesis](wiki/synthesis/)** - Agent context and API references
 
 ## Entity Pages
 
-### Input Structure
-- [[ABINIT_Input_Format]] - Main input file structure and syntax
-- [[Input_Variables]] - Key input variables and their usage
-- [[Dataset_Multiple]] - Multi-dataset calculations
+### Core Input Variables
+- [ABINIT](wiki/entities/ABINIT.md) — Software overview, input format, and LSP support
+- [ecut](wiki/entities/ecut.md) — Plane-wave energy cutoff (ABINIT101, ABINIT031)
+- [natom](wiki/entities/natom.md) — Number of atoms (ABINIT102)
+- [ntypat](wiki/entities/ntypat.md) — Number of atom types
+- [typat](wiki/entities/typat.md) — Atom type mapping (ABINIT103)
 
-### Physical Models
-- [[DFT_Variables]] - Density functional theory variables
-- [[Pseudopotentials]] - Pseudopotential files and formats (PSP8, PAW)
-- [[K_Point_Sampling]] - k-point grids and paths
-
-### File Formats
-- [[Output_Files]] - ABINIT output file types
-- [[Density_Files]] - Charge density formats
-- [[Wavefunction_Files]] - Wavefunction file formats
+### Planned Pages (see docs/LLM-WIKI-PLAN.md)
+- Input_Variables, DFT_Variables, Pseudopotentials, K_Point_Sampling
+- Output_Files, Density_Files, Wavefunction_Files
 
 ## Concept Pages
 
-### Electronic Structure
-- [[DFT_Implementation]] - ABINIT DFT implementation details
-- [[Plane_Wave_Basis]] - Plane wave basis set usage
-- [[FFT_Grids]] - FFT grid parameters and optimization
+- [Diagnostic Engine v1](wiki/concepts/diagnostic-engine-v1.md) — DiagnosticEnvelope/v1 contract, code catalog
 
-### Convergence & Accuracy
-- [[Convergence_Parameters]] - SCF and geometry convergence criteria
-- [[Basis_Set_Cutoffs]] - Energy cutoff selection guidelines
-
-### Calculation Types
-- [[Ground_State_Calculation]] - SCF calculations
-- [[Geometry_Optimization]] - Structural optimization
-- [[Response_Properties]] - DFPT and phonon calculations
+### Planned Pages (see docs/LLM-WIKI-PLAN.md)
+- DFT_Implementation, Plane_Wave_Basis, FFT_Grids
+- Convergence_Parameters, Basis_Set_Cutoffs
+- Ground_State_Calculation, Geometry_Optimization, Response_Properties
 
 ## Synthesis Pages
 
-### References
-- [[Input_Variable_Reference]] - Complete variable catalog
-- [[Diagnostics_Catalog]] - ABINIT LSP diagnostic codes
-- [[API_Reference]] - ABINIT LSP server API
+- [OpenQC Agent Context](wiki/synthesis/openqc-agent-context.md) — Agent CLI surface, capabilities, source provenance
 
-### Workflows
-- [[Quick_Start_Guide]] - Getting started with ABINIT LSP
-- [[Common_Workflows]] - Typical ABINIT calculation workflows
+### Planned Pages (see docs/LLM-WIKI-PLAN.md)
+- Input_Variable_Reference, Diagnostics_Catalog, API_Reference
+- Quick_Start_Guide, Common_Workflows
 
 ## Raw Evidence
 
 Source documentation and code extracts are stored in [raw/assets/](raw/assets/).
+
+- [README.md](raw/assets/README.md) — Project overview
+- [AGENTS.md](raw/assets/AGENTS.md) — Agent workflow guide
+- [DIAGNOSTIC_ENGINE_V1.md](raw/assets/DIAGNOSTIC_ENGINE_V1.md) — Diagnostic engine spec
+- [diagnostic-engine-v1.schema.json](raw/assets/diagnostic-engine-v1.schema.json) — Schema
+- [upstream-sources.md](raw/assets/upstream-sources.md) — Official ABINIT docs link manifest
+- [examples-silicon-scf.abi](raw/assets/examples-silicon-scf.abi) — Si SCF tutorial example
+- [examples-relaxation.abi](raw/assets/examples-relaxation.abi) — Si relaxation example
+- [examples-multidataset.abi](raw/assets/examples-multidataset.abi) — Multi-dataset example
 
 ## Changelog
 
