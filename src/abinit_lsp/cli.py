@@ -28,7 +28,7 @@ def _stdio_smoke() -> None:
     Other messages receive empty responses.
     """
     print(
-        f"abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr
+        "abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr
     )
 
     try:
