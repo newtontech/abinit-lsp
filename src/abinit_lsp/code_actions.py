@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 from .lint import lint_file
-from .diagnostics import Diagnostic
 
 
 @dataclass(frozen=True)

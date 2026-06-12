@@ -7,7 +7,6 @@ especially SCF convergence failures and error messages.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
 from pathlib import Path
 
 from .diagnostics import Diagnostic
@@ -96,7 +95,7 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
 
     for line_no, line in enumerate(lines, start=1):
         # Check SCF convergence failures
-        for label, pattern in _SCF_NOT_CONVERGED_PATTERNS:
+        for _label, pattern in _SCF_NOT_CONVERGED_PATTERNS:
             if pattern.match(line):
                 diagnostics.append(
                     Diagnostic(
@@ -121,7 +120,7 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
                 break  # One diagnostic per line at most
 
         # Check general errors
-        for label, pattern in _ERROR_PATTERNS:
+        for _label, pattern in _ERROR_PATTERNS:
             if pattern.match(line):
                 diagnostics.append(
                     Diagnostic(
