@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON_BIN="${PYTHON:-python3}"
+
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
@@ -19,7 +21,7 @@ for wt in .worktrees/*; do
   [ -n "$branch" ] || continue
 
   pr_json="$(gh pr view "$branch" --json state,mergedAt,headRefName 2>/dev/null || true)"
-  state="$(printf '%s\n' "$pr_json" | python -c 'import json,sys; data=sys.stdin.read().strip(); print(json.loads(data).get("state","") if data else "")' 2>/dev/null || true)"
+  state="$(printf '%s\n' "$pr_json" | "$PYTHON_BIN" -c 'import json,sys; data=sys.stdin.read().strip(); print(json.loads(data).get("state","") if data else "")' 2>/dev/null || true)"
 
   if [ "$state" = "MERGED" ]; then
     echo "Cleaning merged worktree: $wt ($branch)"
