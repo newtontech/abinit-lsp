@@ -4,6 +4,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from .lint import lint_path
 
@@ -62,7 +63,7 @@ def _stdio_smoke() -> None:
         pass
 
 
-def _handle_rpc(msg: dict) -> dict | None:
+def _handle_rpc(msg: dict[str, Any]) -> dict[str, Any] | None:
     """Handle a single JSON-RPC message."""
     method = msg.get("method", "")
     msg_id = msg.get("id")
@@ -120,7 +121,7 @@ def _handle_rpc(msg: dict) -> dict | None:
     return None
 
 
-def _send_response(response: dict) -> None:
+def _send_response(response: dict[str, Any]) -> None:
     """Send a JSON-RPC response with Content-Length framing."""
     body = json.dumps(response)
     header = f"Content-Length: {len(body)}\r\n\r\n"
