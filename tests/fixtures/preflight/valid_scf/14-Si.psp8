@@ -1,0 +1,2 @@
+# minimal placeholder pseudopotential file for the valid_scf fixture
+# Real ABINIT runs would replace this with a norm-conserving/PAW dataset.

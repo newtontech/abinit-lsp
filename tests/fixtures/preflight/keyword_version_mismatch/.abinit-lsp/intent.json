@@ -1,0 +1,5 @@
+{
+  "software_version": "abinit >=5.4",
+  "runtime_image": "registry.example.com/abinit:5.4.0",
+  "schema_source": "abinit-lsp builtin"
+}

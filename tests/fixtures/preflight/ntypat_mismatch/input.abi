@@ -1,0 +1,23 @@
+# ntypat/znucl count mismatch fixture
+ecut    20.0
+
+# Cell
+acell   3*10.26
+rprim   0.0 0.5 0.5
+        0.5 0.0 0.5
+        0.5 0.5 0.0
+
+# Atoms - ntypat=1 but znucl lists two species
+natom   2
+ntypat  1
+typat   1 2
+znucl   14 8
+xred    0.00 0.00 0.00
+        0.25 0.25 0.25
+
+# Pseudopotentials (lists two to match znucl)
+pseudos 14-Si.psp8 8-O.psp8
+
+# k-points
+kptopt  1
+ngkpt   4 4 4

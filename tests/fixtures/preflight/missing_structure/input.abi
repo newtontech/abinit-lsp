@@ -1,0 +1,13 @@
+# Structure section entirely absent
+ecut    20.0
+nstep   50
+
+# Lattice present, but no natom/typat/znucl/xred
+acell   3*10.26
+rprim   0.0 0.5 0.5
+        0.5 0.0 0.5
+        0.5 0.5 0.0
+
+# k-points present
+kptopt  1
+ngkpt   4 4 4

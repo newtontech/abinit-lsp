@@ -11,6 +11,13 @@ from dataclasses import asdict, is_dataclass
 from typing import Any
 
 DIAGNOSTIC_ENGINE_VERSION = "1.0"
+# Normalized cross-fleet preflight envelope. Parent routers (bohrium_skills)
+# consume this stable shape; backends stay free to populate whatever subset of
+# the optional fields they can evidence. ``diagnostic_engine`` keeps the
+# legacy "1.0" label for existing consumers; ``diagnostic_envelope`` names the
+# stable fleet contract so the parent probe can branch on it without breaking
+# older readers.
+DIAGNOSTIC_ENVELOPE_VERSION = "v1"
 DIAGNOSTIC_CATEGORIES = (
     "syntax",
     "schema",
@@ -165,8 +172,9 @@ def diagnostic_to_dict(
         suggested_fix = legacy.get("suggested_fix")
         fix_hints = [] if suggested_fix is None else [suggested_fix]
     blocking = bool(legacy.get("blocking", severity == "error" and confidence >= 0.8))
-    return {
+    payload = {
         "diagnostic_engine": DIAGNOSTIC_ENGINE_VERSION,
+        "diagnostic_envelope": DIAGNOSTIC_ENVELOPE_VERSION,
         "code": str(code or "diagnostic"),
         "severity": severity,
         "category": category,
@@ -183,6 +191,31 @@ def diagnostic_to_dict(
         "blocking": blocking,
         "message": str(message or ""),
     }
+    # Optional envelope fields. Carried only when the producer evidences them,
+    # so legacy callers keep a stable shape while preflight diagnostics grow
+    # the richer contract the fleet parent consumes.
+    actions = legacy.get("actions")
+    if actions:
+        payload["actions"] = list(actions)
+    source_provenance = legacy.get("source_provenance")
+    if source_provenance:
+        payload["source_provenance"] = source_provenance
+    domain_tags = legacy.get("domain_tags")
+    if domain_tags:
+        payload["domain_tags"] = list(domain_tags)
+    facts = legacy.get("facts")
+    if facts:
+        payload["facts"] = facts
+    artifact_roles = legacy.get("artifact_roles")
+    if artifact_roles:
+        payload["artifact_roles"] = list(artifact_roles)
+    version_assumption = legacy.get("version_assumption")
+    if version_assumption:
+        payload["version_assumption"] = version_assumption
+    intent = legacy.get("intent")
+    if intent:
+        payload["intent"] = intent
+    return payload
 
 
 def serialize_diagnostics(
@@ -217,6 +250,9 @@ def agent_check_payload(
     diagnostics: Iterable[Any] = (),
     path: str = "",
     file_type: str = "",
+    intent: dict[str, Any] | None = None,
+    version_assumption: dict[str, Any] | None = None,
+    artifacts: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Build the stable top-level JSON payload returned by *-lsp-tool."""
     items = serialize_diagnostics(
@@ -226,13 +262,14 @@ def agent_check_payload(
         file_type=file_type,
     )
     blocking_count = sum(1 for item in items if item["blocking"])
-    return {
+    payload: dict[str, Any] = {
         "uri": uri,
         "operation": operation,
         "ok": blocking_count == 0,
         "version": version,
         "software": software,
         "diagnostic_engine": version,
+        "diagnostic_envelope": DIAGNOSTIC_ENVELOPE_VERSION,
         "diagnostics": items,
         "summary": {
             "count": len(items),
@@ -241,3 +278,13 @@ def agent_check_payload(
             "warnings": sum(1 for item in items if item["severity"] == "warning"),
         },
     }
+    # Intent + version assumptions live at the envelope top level so the parent
+    # router can branch on them without re-parsing every diagnostic. They are
+    # optional; callers that cannot evidence them omit them.
+    if intent:
+        payload["intent"] = intent
+    if version_assumption:
+        payload["version_assumption"] = version_assumption
+    if artifacts:
+        payload["artifacts"] = list(artifacts)
+    return payload
