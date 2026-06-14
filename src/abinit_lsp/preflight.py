@@ -284,9 +284,7 @@ def build_artifact_graph(
                     exists=resolved.exists(),
                     source=f"abi:pseudos:{filename}",
                     referenced_from=(str(input_path), pseudo_line),
-                    detail=(
-                        {"declared_dir": pseudo_dir_value} if pseudo_dir_value else None
-                    ),
+                    detail=({"declared_dir": pseudo_dir_value} if pseudo_dir_value else None),
                 )
             )
 
@@ -371,9 +369,7 @@ def preflight_diagnostics(
     diagnostics.extend(_unresolved_pseudo_diagnostics(graph))
     diagnostics.extend(_low_ecut_diagnostics(abinit_file, input_path, intent))
     diagnostics.extend(_suspicious_kpoints_diagnostics(abinit_file, input_path))
-    diagnostics.extend(
-        _version_keyword_diagnostics(abinit_file, input_path, version_assumption)
-    )
+    diagnostics.extend(_version_keyword_diagnostics(abinit_file, input_path, version_assumption))
     diagnostics.extend(_version_assumption_diagnostic(version_assumption, intent, input_path))
 
     return sorted(
@@ -596,9 +592,7 @@ def _kpoints_presence_diagnostics(
     return out
 
 
-def _ntypat_znucl_diagnostics(
-    abinit_file: Any, input_path: Path
-) -> list[dict[str, Any]]:
+def _ntypat_znucl_diagnostics(abinit_file: Any, input_path: Path) -> list[dict[str, Any]]:
     """Cross-check ntypat against the znucl array length and typat values.
 
     This is the generic "declared count vs evidence count" cross-artifact
@@ -815,16 +809,11 @@ def _low_ecut_diagnostics(
         ecut = float(ecut_entry[0][0])
     except (ValueError, IndexError):
         return out
-    threshold = float(
-        (intent or {}).get("ecut_warning_ha", DEFAULT_ECUT_WARNING_HA)
-    )
+    threshold = float((intent or {}).get("ecut_warning_ha", DEFAULT_ECUT_WARNING_HA))
     high_accuracy = bool((intent or {}).get("high_accuracy_production", False))
     if ecut < threshold:
         severity = "warning"
-        message = (
-            f"ecut={ecut} Ha is below the conservative workflow threshold "
-            f"({threshold} Ha)"
-        )
+        message = f"ecut={ecut} Ha is below the conservative workflow threshold ({threshold} Ha)"
         if high_accuracy:
             message += "; intent marks this as high-accuracy production input"
         line = ecut_entry[1]
@@ -870,9 +859,7 @@ def _low_ecut_diagnostics(
     return out
 
 
-def _suspicious_kpoints_diagnostics(
-    abinit_file: Any, input_path: Path
-) -> list[dict[str, Any]]:
+def _suspicious_kpoints_diagnostics(abinit_file: Any, input_path: Path) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     ngkpt_entry = _keyword_value(abinit_file, "ngkpt")
     if ngkpt_entry is None:

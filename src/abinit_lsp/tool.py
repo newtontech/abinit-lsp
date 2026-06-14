@@ -189,11 +189,7 @@ def manifest_path(path: Path | None = None) -> dict[str, Any]:
             if isinstance(data, list):
                 fixtures = [item for item in data if isinstance(item, dict)]
             elif isinstance(data, dict) and isinstance(data.get("fixtures"), list):
-                fixtures = [
-                    item
-                    for item in data["fixtures"]
-                    if isinstance(item, dict)
-                ]
+                fixtures = [item for item in data["fixtures"] if isinstance(item, dict)]
     return fleet_manifest(fixtures=fixtures)
 
 
@@ -266,9 +262,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.operation == "preflight":
         payload = preflight_path(args.path)
         print(json.dumps(payload, indent=2, sort_keys=True))
-        return (
-            1 if getattr(args, "fail_on_blocking", False) and not payload["ok"] else 0
-        )
+        return 1 if getattr(args, "fail_on_blocking", False) and not payload["ok"] else 0
     if args.operation == "manifest":
         payload = manifest_path(getattr(args, "path", None))
         print(json.dumps(payload, indent=2, sort_keys=True))
