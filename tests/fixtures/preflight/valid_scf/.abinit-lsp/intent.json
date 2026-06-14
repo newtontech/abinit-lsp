@@ -1,0 +1,7 @@
+{
+  "software_version": "abinit >=9.6",
+  "runtime_image": "registry.example.com/abinit:9.6.0",
+  "schema_source": "abinit-lsp builtin",
+  "high_accuracy_production": false,
+  "ecut_warning_ha": 15.0
+}

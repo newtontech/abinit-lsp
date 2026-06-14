@@ -1,0 +1,40 @@
+{
+  "fixtures": [
+    {
+      "name": "valid_scf",
+      "path": "tests/fixtures/preflight/valid_scf",
+      "expect_ok": true,
+      "expect_codes": []
+    },
+    {
+      "name": "ntypat_mismatch",
+      "path": "tests/fixtures/preflight/ntypat_mismatch",
+      "expect_ok": false,
+      "expect_codes": ["ABINIT604"]
+    },
+    {
+      "name": "missing_structure",
+      "path": "tests/fixtures/preflight/missing_structure",
+      "expect_ok": false,
+      "expect_codes": ["ABINIT602"]
+    },
+    {
+      "name": "missing_pseudos",
+      "path": "tests/fixtures/preflight/missing_pseudos",
+      "expect_ok": false,
+      "expect_codes": ["ABINIT606"]
+    },
+    {
+      "name": "low_ecut",
+      "path": "tests/fixtures/preflight/low_ecut",
+      "expect_ok": true,
+      "expect_codes": ["ABINIT607"]
+    },
+    {
+      "name": "keyword_version_mismatch",
+      "path": "tests/fixtures/preflight/keyword_version_mismatch",
+      "expect_ok": false,
+      "expect_codes": ["ABINIT610"]
+    }
+  ]
+}
