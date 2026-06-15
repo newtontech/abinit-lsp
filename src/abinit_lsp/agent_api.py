@@ -7,6 +7,8 @@ Provides a unified JSON interface for:
 - Hover documentation (issue #23)
 - Log parsing (issue #13, #20)
 - OpenQC smoke test (issue #7)
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
 """
 
 from __future__ import annotations
@@ -28,6 +30,8 @@ def describe_domain_language() -> dict[str, Any]:
     """Return a description of the ABINIT domain language.
 
     Used by agents and IDEs to understand the ABINIT input format.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     return {
         "domain": "abinit",
@@ -59,6 +63,8 @@ def get_hover(keyword: str) -> dict[str, Any]:
 
     Returns:
         Dict with 'keyword', 'documentation', and 'found' keys.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     docs = get_hover_docs(keyword)
     return {
@@ -72,6 +78,8 @@ def check_and_serialize(path: Path) -> dict[str, Any]:
     """Run parser-backed lint and return rich JSON payload (issues #5, #11).
 
     Combines lint diagnostics with the Diagnostic Engine v1 serialization.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     path = Path(path)
     diagnostics = lint_path(path)
@@ -86,19 +94,28 @@ def check_and_serialize(path: Path) -> dict[str, Any]:
 
 
 def get_code_actions_json(path: Path) -> list[dict[str, Any]]:
-    """Return code actions as JSON-serializable list (issue #21)."""
+    """Return code actions as JSON-serializable list (issue #21).
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     actions = get_code_actions(path)
     return [a.to_json() for a in actions]
 
 
 def parse_abinit_log(path: Path) -> list[dict[str, Any]]:
-    """Parse an ABINIT log file and return diagnostics as JSON (issues #13, #20)."""
+    """Parse an ABINIT log file and return diagnostics as JSON (issues #13, #20).
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics = parse_log_file(path)
     return [d.to_json() for d in diagnostics]
 
 
 def parse_abinit_log_content(content: str) -> list[dict[str, Any]]:
-    """Parse ABINIT log content string and return diagnostics as JSON."""
+    """Parse ABINIT log content string and return diagnostics as JSON.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics = parse_log(content, Path("<log>"))
     return [d.to_json() for d in diagnostics]
 
@@ -107,6 +124,8 @@ def openqc_smoke() -> dict[str, Any]:
     """OpenQC smoke test endpoint (issue #7).
 
     Returns capability status for each feature.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     manifest = get_rule_manifest()
     return {
@@ -136,6 +155,8 @@ def explain_rule(rule_id: str) -> dict[str, Any] | None:
     """Explain a specific rule by its rule_id (issue #11).
 
     Returns rule metadata or None if not found.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     for r in get_rule_manifest():
         if r["rule_id"] == rule_id:
@@ -144,7 +165,10 @@ def explain_rule(rule_id: str) -> dict[str, Any] | None:
 
 
 def _file_type(path: Path) -> str:
-    """Determine file type from path."""
+    """Determine file type from path.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     name = path.name.upper()
     if "." in path.name:
         return path.suffix.lstrip(".").lower()

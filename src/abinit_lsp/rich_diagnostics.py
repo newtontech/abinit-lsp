@@ -2,6 +2,8 @@
 
 The module keeps existing LSP/provider diagnostics untouched and provides a
 python-lsp-server-style provider boundary for agent-facing JSON consumers.
+
+LLM Wiki: wiki/concepts/diagnostic-engine-v1.md
 """
 
 from __future__ import annotations
@@ -50,13 +52,19 @@ _SEVERITY_LABELS = {
 
 
 def severity_label(value: Any) -> str:
-    """Return a stable lowercase severity label."""
+    """Return a stable lowercase severity label.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     raw = getattr(value, "value", value)
     return _SEVERITY_LABELS.get(raw, _SEVERITY_LABELS.get(str(raw), "information"))
 
 
 def infer_category(code: Any = None, message: str = "", source: str = "") -> str:
-    """Infer the Diagnostic Engine v1 category from legacy diagnostic fields."""
+    """Infer the Diagnostic Engine v1 category from legacy diagnostic fields.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     text = f"{code or ''} {message} {source}".lower()
     if any(token in text for token in ("syntax", "parse", "parser", "token", "utf-8")):
         return "syntax"
@@ -157,7 +165,10 @@ def diagnostic_to_dict(
     path: str = "",
     file_type: str = "",
 ) -> dict[str, Any]:
-    """Convert legacy/dataclass/LSP diagnostics into the rich v1 contract."""
+    """Convert legacy/dataclass/LSP diagnostics into the rich v1 contract.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     legacy = _legacy_payload(diagnostic)
     code = legacy.get("code", _get_attr_or_item(diagnostic, "code", "diagnostic"))
     source = legacy.get("source", _get_attr_or_item(diagnostic, "source", f"{software}-lsp"))
@@ -225,7 +236,10 @@ def serialize_diagnostics(
     path: str = "",
     file_type: str = "",
 ) -> list[dict[str, Any]]:
-    """Serialize diagnostics deterministically for agents and snapshots."""
+    """Serialize diagnostics deterministically for agents and snapshots.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     items = [
         diagnostic_to_dict(item, software=software, path=path, file_type=file_type)
         for item in diagnostics
@@ -254,7 +268,10 @@ def agent_check_payload(
     version_assumption: dict[str, Any] | None = None,
     artifacts: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Build the stable top-level JSON payload returned by *-lsp-tool."""
+    """Build the stable top-level JSON payload returned by *-lsp-tool.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     items = serialize_diagnostics(
         diagnostics,
         software=software,

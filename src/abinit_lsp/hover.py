@@ -7,6 +7,10 @@ keyword.
 Source provenance: KEYWORD_DOCS entries trace to official ABINIT documentation
 at https://docs.abinit.org/variables/ . The wiki manifest at
 raw/assets/upstream-sources.md maps each variable to its canonical URL.
+
+LLM Wiki: wiki/entities/ecut.md
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
 """
 
 from __future__ import annotations
@@ -21,6 +25,8 @@ def get_hover_docs(keyword: str) -> str | None:
 
     Returns ``None`` if the keyword is unknown.  Strips trailing dataset
     index digits before lookup (``ecut1`` → ``ecut``).
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     kw_lower = keyword.lower().strip()
 

@@ -27,6 +27,8 @@ def _stdio_smoke() -> None:
     Reads Content-Length framed JSON-RPC messages from stdin,
     responds to initialize and textDocument/diagnostic requests.
     Other messages receive empty responses.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     print("abinit-lsp: stdio JSON-RPC smoke path active", file=sys.stderr)
 
@@ -64,7 +66,10 @@ def _stdio_smoke() -> None:
 
 
 def _handle_rpc(msg: dict[str, Any]) -> dict[str, Any] | None:
-    """Handle a single JSON-RPC message."""
+    """Handle a single JSON-RPC message.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     method = msg.get("method", "")
     msg_id = msg.get("id")
     params = msg.get("params", {})
@@ -122,7 +127,10 @@ def _handle_rpc(msg: dict[str, Any]) -> dict[str, Any] | None:
 
 
 def _send_response(response: dict[str, Any]) -> None:
-    """Send a JSON-RPC response with Content-Length framing."""
+    """Send a JSON-RPC response with Content-Length framing.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     body = json.dumps(response)
     header = f"Content-Length: {len(body)}\r\n\r\n"
     sys.stdout.write(header)

@@ -137,7 +137,10 @@ def _analyze_text(path: Path, content: str) -> list[Diagnostic]:
 
 
 def _check_duplicate_keywords(path: Path, meaningful: list[tuple[int, str]]) -> list[Diagnostic]:
-    """Warn about duplicate keyword definitions."""
+    """Warn about duplicate keyword definitions.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     seen: dict[str, int] = {}
     diagnostics: list[Diagnostic] = []
     for line_no, line in meaningful:
@@ -191,7 +194,10 @@ _VALUE_RULES: dict[str, dict[str, object]] = {
 
 
 def _check_value_ranges(path: Path, meaningful: list[tuple[int, str]]) -> list[Diagnostic]:
-    """Validate keyword values against known rules."""
+    """Validate keyword values against known rules.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
     for line_no, line in meaningful:
         parts = line.split()

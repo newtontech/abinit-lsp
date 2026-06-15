@@ -2,6 +2,8 @@
 
 Each rule is a named constant with a check function that operates on the
 parsed AbinitFile representation.  Diagnostic codes use the ABINIT prefix.
+
+LLM Wiki: wiki/concepts/diagnostic-engine-v1.md
 """
 
 from __future__ import annotations
@@ -109,7 +111,10 @@ _KNOWN_BASES: set[str] = {
 
 @dataclass(frozen=True)
 class RuleInfo:
-    """Static metadata about a lint rule."""
+    """Static metadata about a lint rule.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
 
     rule_id: str
     code: str
@@ -213,6 +218,8 @@ def get_rule_manifest() -> list[dict[str, Any]]:
     blocking policy, source provenance URL, version scope, and a description.
     OpenQC consumers and the agent CLI read this manifest so every diagnostic
     can be traced from rule_id -> official source.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     enriched: list[dict[str, Any]] = []
     for r in RULE_MANIFEST:
@@ -400,7 +407,10 @@ RULE_PROVENANCE: dict[str, dict[str, Any]] = {
 
 
 def _severity_blocks(severity: str, confidence: float = 1.0) -> bool:
-    """Mirror rich_diagnostics blocking policy: errors with high confidence block."""
+    """Mirror rich_diagnostics blocking policy: errors with high confidence block.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     return severity == "error" and confidence >= 0.8
 
 
@@ -410,6 +420,8 @@ def _enrich_provenance(diag: Diagnostic) -> Diagnostic:
     Existing provenance is preserved so callers that already evidence a more
     specific source (e.g. preflight version-aware checks) keep their richer
     payload. Provenance lookup is by diagnostic short code.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     return enrich_diagnostic_provenance(diag)
 
@@ -418,6 +430,8 @@ def enrich_diagnostic_provenance(diag: Diagnostic) -> Diagnostic:
     """Public helper used by other modules (log_parser, preflight helpers).
 
     Returns ``diag`` unchanged when no provenance is available for its code.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     prov = RULE_PROVENANCE.get(diag.code)
     if not prov:
@@ -453,7 +467,10 @@ def enrich_diagnostic_provenance(diag: Diagnostic) -> Diagnostic:
 
 
 def check_missing_ecut(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #14: Warn when ecut is missing from the input."""
+    """RULE #14: Warn when ecut is missing from the input.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     if af.has_keyword("ecut"):
         return []
     return [
@@ -471,7 +488,10 @@ def check_missing_ecut(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_missing_natom(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #15: Error when natom is missing."""
+    """RULE #15: Error when natom is missing.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     if af.has_keyword("natom"):
         return []
     return [
@@ -489,7 +509,10 @@ def check_missing_natom(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_inconsistent_typat_znucl(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #16: Error when typat/znucl are inconsistent with ntypat."""
+    """RULE #16: Error when typat/znucl are inconsistent with ntypat.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     typat_entries = af.get_entries_for("typat")
@@ -581,7 +604,10 @@ def check_inconsistent_typat_znucl(af: AbinitFile, path: Path) -> list[Diagnosti
 
 
 def check_invalid_variable_type(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #17: Error when a variable value has the wrong type."""
+    """RULE #17: Error when a variable value has the wrong type.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     for entry in af.entries:
@@ -661,7 +687,10 @@ def check_invalid_variable_type(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_bad_multidataset_suffix(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #18: Warn when dataset suffix exceeds ndtset."""
+    """RULE #18: Warn when dataset suffix exceeds ndtset.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     # Find ndtset value
@@ -705,7 +734,10 @@ def check_bad_multidataset_suffix(af: AbinitFile, path: Path) -> list[Diagnostic
 
 
 def check_loose_tolerance(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE #19: Warn when convergence tolerance is too loose."""
+    """RULE #19: Warn when convergence tolerance is too loose.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     THRESHOLD_TOLDFE = 1e-4
@@ -799,7 +831,10 @@ def check_loose_tolerance(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_unknown_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE: Warn about unknown keywords."""
+    """RULE: Warn about unknown keywords.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
     for entry in af.entries:
         base = entry.base_keyword
@@ -822,7 +857,10 @@ def check_unknown_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_duplicate_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """RULE: Warn about duplicate keyword definitions."""
+    """RULE: Warn about duplicate keyword definitions.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
     seen: dict[str, int] = {}
     for entry in af.entries:
@@ -850,7 +888,10 @@ def check_duplicate_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_missing_pseudos(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """ABINIT109: pseudos keyword is required for pseudopotential calculations."""
+    """ABINIT109: pseudos keyword is required for pseudopotential calculations.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     if af.has_keyword("pseudos"):
         return []
     return [
@@ -868,7 +909,10 @@ def check_missing_pseudos(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def check_pseudo_count_mismatch(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """ABINIT110: number of pseudopotential files must match ntypat."""
+    """ABINIT110: number of pseudopotential files must match ntypat.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     ntypat_entries = af.get_entries_for("ntypat")
@@ -934,7 +978,10 @@ _DIMENSION_VARIABLES = {
 
 
 def check_dataset_dimension_consistency(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """Check that dimension variables are consistent across datasets."""
+    """Check that dimension variables are consistent across datasets.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
 
     # Group entries by base keyword
@@ -1010,7 +1057,10 @@ _DEPRECATED_VARIABLES = {
 
 
 def check_deprecated_variables(af: AbinitFile, path: Path) -> list[Diagnostic]:
-    """ABINIT111: flag deprecated ABINIT variables."""
+    """ABINIT111: flag deprecated ABINIT variables.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     diagnostics: list[Diagnostic] = []
     seen: dict[str, int] = {}
 
@@ -1042,7 +1092,10 @@ def check_deprecated_variables(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 def lint_file(path: Path) -> list[Diagnostic]:
-    """Run all parser-backed lint rules on an ABINIT file."""
+    """Run all parser-backed lint rules on an ABINIT file.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     path = Path(path)
     try:
         content = path.read_text(encoding="utf-8")
@@ -1085,7 +1138,10 @@ def lint_file(path: Path) -> list[Diagnostic]:
 
 
 def lint_path(path: Path) -> list[Diagnostic]:
-    """Lint a single file or directory."""
+    """Lint a single file or directory.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     path = Path(path)
     if path.is_file():
         return lint_file(path)

@@ -2,6 +2,8 @@
 
 Parses ABINIT standard output and log files for runtime diagnostics,
 especially SCF convergence failures and error messages.
+
+LLM Wiki: wiki/concepts/diagnostic-engine-v1.md
 """
 
 from __future__ import annotations
@@ -172,7 +174,10 @@ _LOG_ERROR_FIXES: dict[str, dict[str, object]] = {
 
 
 def _suggested_fix_for_log_error(code: str) -> dict[str, object] | None:
-    """Return a suggested fix envelope for a known log error code."""
+    """Return a suggested fix envelope for a known log error code.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     return _LOG_ERROR_FIXES.get(code)
 
 
@@ -185,6 +190,8 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
 
     Returns:
         A list of Diagnostic objects for any issues found.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     # Imported lazily to avoid a circular import: lint.py imports parser.py
     # and parser.py does not import log_parser, but log_parser importing lint
@@ -245,7 +252,10 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
 
 
 def parse_log_file(path: Path) -> list[Diagnostic]:
-    """Parse an ABINIT log file from a filesystem path."""
+    """Parse an ABINIT log file from a filesystem path.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     path = Path(path)
     try:
         content = path.read_text(encoding="utf-8", errors="replace")
