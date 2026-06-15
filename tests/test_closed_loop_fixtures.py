@@ -166,9 +166,7 @@ def test_provenance_manifest_exists_and_links_official_docs() -> None:
     assert len(entries) >= 5
     capabilities = json.loads((REPO_ROOT / "lsp-capabilities.json").read_text())
     provenance_paths = {
-        item.get("path")
-        for item in capabilities.get("sourceProvenance", [])
-        if item.get("path")
+        item.get("path") for item in capabilities.get("sourceProvenance", []) if item.get("path")
     }
     assert "raw/assets/manifest.json" in provenance_paths
 
