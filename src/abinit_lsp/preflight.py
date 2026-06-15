@@ -26,6 +26,8 @@ The diagnostics emitted here are plain dictionaries (not the legacy
 ``Diagnostic`` dataclass) so they can carry the richer ``DiagnosticEnvelope/v1``
 fields (``source_provenance``, ``domain_tags``, ``facts``, ``artifact_roles``,
 ``version_assumption``, ``actions``) directly.
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
 """
 
 from __future__ import annotations
@@ -99,6 +101,8 @@ class ArtifactNode:
     finding) or, for in-file ABINIT sections, the primary input path;
     ``exists`` records whether the artifact is present; ``source`` records
     where the reference originated so consumers can trace provenance.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
 
     role: str
@@ -111,7 +115,10 @@ class ArtifactNode:
 
 @dataclass
 class ArtifactGraph:
-    """Generic cross-artifact graph built from a parsed case directory."""
+    """Generic cross-artifact graph built from a parsed case directory.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
 
     case_dir: Path
     nodes: list[ArtifactNode] = field(default_factory=list)
@@ -120,7 +127,10 @@ class ArtifactGraph:
         return [node for node in self.nodes if node.role == role]
 
     def to_json(self) -> list[dict[str, Any]]:
-        """Serialize the graph for the parent probe/report workflow."""
+        """Serialize the graph for the parent probe/report workflow.
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
 
         def _node_json(node: ArtifactNode) -> dict[str, Any]:
             payload: dict[str, Any] = {
@@ -149,6 +159,8 @@ def _find_primary_input(case_dir: Path) -> Path | None:
 
     ABINIT conventionally takes the input from ``.abi`` / ``.abinit`` / ``.in``
     files. We pick the first match so the graph has a stable primary node.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     for pattern in ("*.abi", "*.abinit", "*.in"):
         for candidate in sorted(case_dir.glob(pattern)):
@@ -158,7 +170,10 @@ def _find_primary_input(case_dir: Path) -> Path | None:
 
 
 def _keyword_value(abinit_file: Any, keyword: str) -> tuple[list[str], int] | None:
-    """Return (values, line) for a keyword in a parsed AbinitFile, or None."""
+    """Return (values, line) for a keyword in a parsed AbinitFile, or None.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     entries = abinit_file.get_entries_for(keyword)
     if not entries:
         return None
@@ -194,6 +209,8 @@ def build_artifact_graph(
     The model is generic: it records roles + resolved paths + provenance. The
     same shape generalizes to other fleet backends because it never bakes in
     MatMaster/Bohrium runtime concepts (no input_dir, no image, no session).
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     case_dir = case_dir.resolve()
     graph = ArtifactGraph(case_dir=case_dir)
@@ -315,6 +332,8 @@ def preflight_diagnostics(
     Returns a tuple of (diagnostics, artifact_graph). Diagnostics are envelope
     dicts carrying the full ``DiagnosticEnvelope/v1`` field set so the agent
     CLI can emit them directly without re-shaping.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     case_dir = case_dir.resolve()
     input_path = _find_primary_input(case_dir)
@@ -410,6 +429,8 @@ def _diag(
     ``source_provenance``, ``fix_hints``/``actions``) plus the richer envelope
     fields (``facts``, ``artifact_roles``, ``domain_tags``,
     ``version_assumption``) used by the parent fleet probe.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     line0 = max(line - 1, 0)
     col0 = max(column - 1, 0)
@@ -548,6 +569,8 @@ def _kpoints_presence_diagnostics(
     produces meaningless band energies for metals/semiconductors. We surface
     this as a non-blocking warning so the parent probe can act on it without
     blocking legitimate gamma-only test inputs.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     out: list[dict[str, Any]] = []
     for node in graph.by_role(ROLE_KPOINTS):
@@ -598,6 +621,8 @@ def _ntypat_znucl_diagnostics(abinit_file: Any, input_path: Path) -> list[dict[s
     This is the generic "declared count vs evidence count" cross-artifact
     check that ABACUS expresses as ntype-vs-species; for ABINIT the species
     list is the znucl array.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     out: list[dict[str, Any]] = []
     ntypat_entry = _keyword_value(abinit_file, "ntypat")
@@ -664,6 +689,8 @@ def _pseudos_diagnostics(
     optionally their directory from ``pp_dirpath``). A structure-declaring
     input without pseudos will fail at runtime, so we surface it as a
     blocking cross-artifact finding.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     out: list[dict[str, Any]] = []
     has_structure = _has_any(abinit_file, _STRUCTURE_KEYWORDS)
@@ -923,6 +950,8 @@ def resolve_version_assumption(intent: dict[str, Any] | None) -> dict[str, Any]:
     acceptance criterion. The intent contract can override
     ``software_version`` (e.g. ``abinit >=9.6``); otherwise we fall back to the
     schema version the builtin keyword set was authored against.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     intent = intent or {}
     software_version = intent.get("software_version")
@@ -973,6 +1002,8 @@ def _version_keyword_diagnostics(
     that requires a newer ABINIT version than the intent/runtime declares, we
     surface an explicit version mismatch so the parent probe can fail early
     rather than discovering the incompatibility at runtime.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     out: list[dict[str, Any]] = []
     declared_version = version_assumption.get("software_version", "unknown")
@@ -1039,6 +1070,8 @@ def _version_lt(declared: str, required: str) -> bool:
     Both inputs are of the form ``abinit >=X.Y``. We extract the leading
     numeric tuple from each and compare element-wise. Returns False if either
     side cannot be parsed, so we never fabricate a version mismatch.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
 
     def _tuple(text: str) -> tuple[int, ...]:
@@ -1068,6 +1101,8 @@ def _version_assumption_diagnostic(
     This makes the version assumption machine-readable in the diagnostic stream
     itself (not just metadata) so the parent probe can surface it without
     parsing the envelope top-level.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     if version_assumption["exact_runtime_known"]:
         return []
@@ -1118,6 +1153,8 @@ def fleet_manifest(
     which preflight codes exist, which capabilities are implemented, and which
     fixtures exercise them. Keeping it as data (not README prose) means the
     fleet regression evidence stays in sync with the implementation.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     codes = {
         CODE_MISSING_INPUT: {

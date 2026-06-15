@@ -2,6 +2,8 @@
 
 Provides quick-fix actions for common ABINIT diagnostics: adding missing
 required variables, fixing variable typos, and normalizing simple values.
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
 """
 
 from __future__ import annotations
@@ -15,7 +17,10 @@ from .lint import lint_file
 
 @dataclass(frozen=True)
 class CodeAction:
-    """A code action (quick fix) for an ABINIT diagnostic."""
+    """A code action (quick fix) for an ABINIT diagnostic.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
 
     title: str
     kind: str
@@ -35,6 +40,8 @@ def get_code_actions(path: Path) -> list[CodeAction]:
     """Generate code actions for an ABINIT input file.
 
     Scans the file for diagnostics and produces suggested fixes.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     path = Path(path)
     diagnostics = lint_file(path)

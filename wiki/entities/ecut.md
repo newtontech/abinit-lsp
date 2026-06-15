@@ -85,3 +85,7 @@ ecut 30.0
 
 - 2026-06-12: 创建页面
 - 2026-06-13: 添加官方参考链接和 LSP hover 文档来源
+
+## Traceability Sources
+
+- Raw evidence: `raw/assets/upstream-sources.md`

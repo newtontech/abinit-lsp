@@ -1,4 +1,7 @@
-"""ABINIT LSP and CLI tools."""
+"""ABINIT LSP and CLI tools.
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
+"""
 
 __all__ = ["__version__"]
 

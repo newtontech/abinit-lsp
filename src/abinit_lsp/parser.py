@@ -3,6 +3,8 @@
 ABINIT input files consist of keyword-value pairs. Keywords may have dataset
 suffixes (e.g. ``ecut1``, ``ecut2`` for multi-dataset runs). Values can span
 multiple lines for arrays/matrices. Comments start with ``#``, ``!``, or ``;``.
+
+LLM Wiki: wiki/entities/ABINIT.md
 """
 
 from __future__ import annotations
@@ -14,7 +16,10 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class AbinitEntry:
-    """A single keyword entry in an ABINIT file."""
+    """A single keyword entry in an ABINIT file.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
 
     keyword: str
     values: list[str]
@@ -23,36 +28,54 @@ class AbinitEntry:
 
     @property
     def base_keyword(self) -> str:
-        """Strip trailing dataset index digits to get the base keyword."""
+        """Strip trailing dataset index digits to get the base keyword.
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
         m = re.match(r"^(.*?)(\d+)$", self.keyword)
         return m.group(1) if m else self.keyword
 
     @property
     def dataset(self) -> int | None:
-        """Return the dataset index (trailing digits) if present."""
+        """Return the dataset index (trailing digits) if present.
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
         m = re.match(r"^(.*?)(\d+)$", self.keyword)
         return int(m.group(2)) if m else None
 
 
 @dataclass
 class AbinitFile:
-    """Parsed representation of an ABINIT input file."""
+    """Parsed representation of an ABINIT input file.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
 
     path: Path
     entries: list[AbinitEntry] = field(default_factory=list)
     comments: list[tuple[int, str]] = field(default_factory=list)
 
     def keywords(self) -> set[str]:
-        """Return the set of unique keywords (including dataset suffixes)."""
+        """Return the set of unique keywords (including dataset suffixes).
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
         return {e.keyword for e in self.entries}
 
     def has_keyword(self, name: str) -> bool:
-        """Check if a keyword is present (case-insensitive)."""
+        """Check if a keyword is present (case-insensitive).
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
         name_lower = name.lower()
         return any(e.keyword == name_lower for e in self.entries)
 
     def get_entries_for(self, keyword: str) -> list[AbinitEntry]:
-        """Return all entries matching a given keyword."""
+        """Return all entries matching a given keyword.
+
+        LLM Wiki: wiki/synthesis/openqc-agent-context.md
+        """
         keyword_lower = keyword.lower()
         return [e for e in self.entries if e.keyword == keyword_lower]
 
@@ -85,7 +108,10 @@ _COMMENT_PREFIXES = ("#", "!", ";")
 
 
 def parse(path: Path) -> AbinitFile:
-    """Parse an ABINIT file from a path."""
+    """Parse an ABINIT file from a path.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     path = Path(path)
     try:
         content = path.read_text(encoding="utf-8")
@@ -95,7 +121,10 @@ def parse(path: Path) -> AbinitFile:
 
 
 def parse_content(path: Path, content: str) -> AbinitFile:
-    """Parse ABINIT content string into structured representation."""
+    """Parse ABINIT content string into structured representation.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     af = AbinitFile(path=path)
     lines = content.splitlines()
     i = 0
@@ -177,6 +206,8 @@ def _parse_keyword_line(line: str) -> tuple[str | None, list[str]]:
     """Parse a single line into (keyword, [values]).
 
     Supports both ``keyword value1 value2`` and ``keyword = value`` syntaxes.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     # Handle equals syntax
     if "=" in line:

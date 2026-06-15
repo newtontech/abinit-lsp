@@ -1,4 +1,7 @@
-"""Agent-facing CLI for Diagnostic Engine v1 operations."""
+"""Agent-facing CLI for Diagnostic Engine v1 operations.
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
+"""
 
 from __future__ import annotations
 
@@ -74,6 +77,8 @@ def _load_intent(path: Path) -> dict[str, Any] | None:
     (e.g. ``software_version``, ``ecut_warning_ha``,
     ``high_accuracy_production``). It is a workspace-local artifact, never a
     MatMaster/Bohrium runtime concept.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     case_dir = path if path.is_dir() else path.parent
     intent_path = case_dir / ".abinit-lsp" / "intent.json"
@@ -93,6 +98,8 @@ def _looks_like_workspace(case_dir: Path) -> bool:
     cross-artifact graph. A directory with no recognized input keeps the
     legacy single-file lint path so callers that lint one file at a time are
     unaffected.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     if not case_dir.is_dir():
         return False
@@ -109,6 +116,8 @@ def _collect_preflight(
 
     Imported lazily so callers that never touch preflight (e.g. single-file
     LSP hover) pay no import cost.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     from .preflight import preflight_diagnostics, resolve_version_assumption
 
@@ -147,7 +156,10 @@ def check_path(path: Path) -> dict[str, Any]:
 
 
 def preflight_path(path: Path) -> dict[str, Any]:
-    """Return a preflight-only payload (universal checks, no legacy lint)."""
+    """Return a preflight-only payload (universal checks, no legacy lint).
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
+    """
     from .preflight import preflight_diagnostics, resolve_version_assumption
 
     intent = _load_intent(path)
@@ -174,6 +186,8 @@ def manifest_path(path: Path | None = None) -> dict[str, Any]:
     When ``path`` is given, fixture expectations declared in
     ``.abinit-lsp/fixtures.json`` are merged in so the parent probe can confirm
     a case directory exercises the documented codes.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     from .preflight import fleet_manifest
 

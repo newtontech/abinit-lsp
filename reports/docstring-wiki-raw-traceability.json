@@ -1,0 +1,632 @@
+{
+  "schemaVersion": "openqc.lsp.traceability.v1",
+  "serverId": "abinit-lsp",
+  "repository": "newtontech/abinit-lsp",
+  "languageId": "abinit",
+  "generatedAt": "2026-06-15T18:20:51.000Z",
+  "summary": {
+    "docstringsTotal": 93,
+    "docstringsLinked": 93,
+    "brokenWikiLinks": 0,
+    "wikiSourcesWithoutRaw": 0,
+    "rawManifestFailures": 0
+  },
+  "docstrings": [
+    {
+      "path": "scripts/check_docstring_traceability.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/__init__.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "describe_domain_language",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "get_hover",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "check_and_serialize",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "get_code_actions_json",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "parse_abinit_log",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "parse_abinit_log_content",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "openqc_smoke",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "explain_rule",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_api.py",
+      "symbol": "_file_type",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_lsp.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_lsp.py",
+      "symbol": "AgentLSP",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_operations.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_operations.py",
+      "symbol": "with_capabilities",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/agent_operations.py",
+      "symbol": "operation_path",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/analyzer.py",
+      "symbol": "_check_duplicate_keywords",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/analyzer.py",
+      "symbol": "_check_value_ranges",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/cli.py",
+      "symbol": "_stdio_smoke",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/cli.py",
+      "symbol": "_handle_rpc",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/cli.py",
+      "symbol": "_send_response",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/code_actions.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/code_actions.py",
+      "symbol": "CodeAction",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/code_actions.py",
+      "symbol": "get_code_actions",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/completion.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/completion.py",
+      "symbol": "complete_keywords",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/hover.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/entities/ecut.md"
+    },
+    {
+      "path": "src/abinit_lsp/hover.py",
+      "symbol": "get_hover_docs",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/concepts/diagnostic-engine-v1.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "RuleInfo",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "get_rule_manifest",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "_severity_blocks",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "_enrich_provenance",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "enrich_diagnostic_provenance",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_missing_ecut",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_missing_natom",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_inconsistent_typat_znucl",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_invalid_variable_type",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_bad_multidataset_suffix",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_loose_tolerance",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_unknown_keywords",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_duplicate_keywords",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_missing_pseudos",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_pseudo_count_mismatch",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_dataset_dimension_consistency",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "check_deprecated_variables",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "lint_file",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/lint.py",
+      "symbol": "lint_path",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/log_parser.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/concepts/diagnostic-engine-v1.md"
+    },
+    {
+      "path": "src/abinit_lsp/log_parser.py",
+      "symbol": "_suggested_fix_for_log_error",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/log_parser.py",
+      "symbol": "parse_log",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/log_parser.py",
+      "symbol": "parse_log_file",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/entities/ABINIT.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "AbinitEntry",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "AbinitFile",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "parse",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "parse_content",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "_parse_keyword_line",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "base_keyword",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "dataset",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "keywords",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "has_keyword",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/parser.py",
+      "symbol": "get_entries_for",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "ArtifactNode",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "ArtifactGraph",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_find_primary_input",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_keyword_value",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "build_artifact_graph",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "preflight_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_diag",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_kpoints_presence_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_ntypat_znucl_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_pseudos_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "resolve_version_assumption",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_version_keyword_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_version_lt",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "_version_assumption_diagnostic",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "fleet_manifest",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/preflight.py",
+      "symbol": "to_json",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/concepts/diagnostic-engine-v1.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "severity_label",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "infer_category",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "diagnostic_to_dict",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "serialize_diagnostics",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/rich_diagnostics.py",
+      "symbol": "agent_check_payload",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "<module>",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "_load_intent",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "_looks_like_workspace",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "_collect_preflight",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "preflight_path",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    },
+    {
+      "path": "src/abinit_lsp/tool.py",
+      "symbol": "manifest_path",
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md"
+    }
+  ],
+  "wikiSources": [
+    {
+      "wikiPath": "wiki/concepts/diagnostic-engine-v1.md",
+      "sourceUrl": "https://docs.abinit.org/",
+      "rawPath": "raw/assets/DIAGNOSTIC_ENGINE_V1.md"
+    },
+    {
+      "wikiPath": "wiki/entities/ABINIT.md",
+      "sourceUrl": "https://docs.abinit.org/tutorial/",
+      "rawPath": "raw/assets/README.md"
+    },
+    {
+      "wikiPath": "wiki/entities/ecut.md",
+      "sourceUrl": "https://docs.abinit.org/tutorial/base1/",
+      "rawPath": "raw/assets/upstream-sources.md"
+    },
+    {
+      "wikiPath": "wiki/entities/natom.md",
+      "sourceUrl": "https://docs.abinit.org/variables/natom/",
+      "rawPath": "raw/assets/upstream-sources.md"
+    },
+    {
+      "wikiPath": "wiki/entities/ntypat.md",
+      "sourceUrl": "https://docs.abinit.org/variables/ntypat/",
+      "rawPath": "raw/assets/upstream-sources.md"
+    },
+    {
+      "wikiPath": "wiki/entities/typat.md",
+      "sourceUrl": "https://docs.abinit.org/variables/typat/",
+      "rawPath": "raw/assets/upstream-sources.md"
+    },
+    {
+      "wikiPath": "wiki/synthesis/openqc-agent-context.md",
+      "sourceUrl": "https://docs.abinit.org/variables/",
+      "rawPath": "raw/assets/upstream-sources.md"
+    }
+  ],
+  "ruleIds": [
+    {
+      "code": "ABINIT-LINT-INPUT-101",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-STRUCTURE-102",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-STRUCTURE-103",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-VARIABLE-104",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-MULTIDATASET-105",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-SCF-106",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-INPUT-107",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-INPUT-108",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-STRUCTURE-109",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-STRUCTURE-110",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-VARIABLE-111",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LINT-MULTIDATASET-112",
+      "sourcePath": "src/abinit_lsp/lint.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-200",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-201",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-202",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-203",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-204",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-205",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-206",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-207",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-208",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    },
+    {
+      "code": "ABINIT-LOG-RUNTIME-209",
+      "sourcePath": "src/abinit_lsp/log_parser.py"
+    }
+  ],
+  "sourceUrls": [
+    {
+      "url": "https://docs.abinit.org/variables/",
+      "rawPath": "raw/assets/upstream-sources.md",
+      "kind": "official_docs"
+    },
+    {
+      "url": "https://docs.abinit.org/tutorial/",
+      "rawPath": "raw/assets/upstream-sources.md",
+      "kind": "official_docs"
+    },
+    {
+      "url": "https://docs.abinit.org/theory/",
+      "rawPath": "raw/assets/upstream-sources.md",
+      "kind": "official_docs"
+    }
+  ],
+  "rawManifest": {
+    "path": "raw/assets/manifest.json",
+    "ok": true
+  },
+  "manifestErrors": [],
+  "docstringViolations": [],
+  "wikiViolations": []
+}

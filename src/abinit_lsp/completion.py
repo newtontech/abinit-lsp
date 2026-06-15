@@ -2,6 +2,8 @@
 
 Provides completion candidates for ABINIT keywords, with optional prefix
 filtering and dataset-aware suggestions.
+
+LLM Wiki: wiki/synthesis/openqc-agent-context.md
 """
 
 from __future__ import annotations
@@ -261,6 +263,8 @@ def complete_keywords(prefix: str) -> list[dict[str, str]]:
     """Return completion items for ABINIT keywords matching *prefix*.
 
     Each item is a dict with keys ``keyword``, ``kind``, and ``doc``.
+
+    LLM Wiki: wiki/synthesis/openqc-agent-context.md
     """
     prefix_lower = prefix.lower()
     results: list[dict[str, str]] = []
