@@ -1,0 +1,11 @@
+ .Version 10.0.5 of ABINIT
+.(MPI version, prepared for a x86_64_linux_gnu9.2 cluster)
+
+ DATASET  1 : electron ground-state calculation
+
+---MEMORY ALLOCATION-----------------------------------------------------------
+
+ Error: memory exceeded - requested 4294967296 bytes (4.0 GB)
+ Available memory: 2147483648 bytes (2.0 GB)
+ Please reduce ngfft or use a smaller basis set
+

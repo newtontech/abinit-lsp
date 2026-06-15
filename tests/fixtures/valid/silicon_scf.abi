@@ -3,14 +3,12 @@
 #         https://docs.abinit.org/tutorial/base1/ (silicon ground state).
 # Expectation: abinit-lsp-tool check returns no diagnostics.
 ecut    20.0
+pseudos "Si.psp8"
 nstep   100
 toldfe  1.0e-8
 
 # Cell
 acell   3*10.26
-rprim   0.0 0.5 0.5
-        0.5 0.0 0.5
-        0.5 0.5 0.0
 
 # Atoms
 natom   2
@@ -26,6 +24,5 @@ ngkpt   4 4 4
 
 # Misc
 diemac  12.0
-ixc     1
 occopt  1
 nband   10

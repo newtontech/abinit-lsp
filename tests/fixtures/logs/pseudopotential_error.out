@@ -1,0 +1,10 @@
+ .Version 10.0.5 of ABINIT
+.(MPI version, prepared for a x86_64_linux_gnu9.2 cluster)
+
+ DATASET  1 : electron ground-state calculation
+
+---READ PSEUDOPOTENTIALS-------------------------------------------------------
+
+ Pseudopotential error: file Si.psp4 not found in pseudopotential search path
+ Please check the pseudos keyword in your input file
+

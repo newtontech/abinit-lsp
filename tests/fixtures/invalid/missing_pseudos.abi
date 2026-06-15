@@ -1,0 +1,15 @@
+# ABINIT input missing pseudos keyword - should trigger ABINIT109
+# This file tests the missing pseudos diagnostic
+
+natom 2
+ntypat 1
+typat 1 1
+znucl 14.0
+ecut 20.0
+kptopt 1
+nkpt 1
+kpt 0.25 0.25 0.25
+nstep 100
+toldfe 1.0d-6
+
+# Pseudos keyword is missing - ABINIT requires this

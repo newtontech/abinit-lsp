@@ -16,7 +16,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 class TestLintCLI:
     def test_valid_file_returns_0(self, tmp_path: Path) -> None:
         f = tmp_path / "good.abi"
-        f.write_text("ecut 30\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n")
+        f.write_text('ecut 30\npseudos "Si.psp8"\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n')
         assert lint_main([str(f)]) == 0
 
     def test_error_file_returns_1(self, tmp_path: Path) -> None:
@@ -26,7 +26,7 @@ class TestLintCLI:
 
     def test_json_output(self, tmp_path: Path) -> None:
         f = tmp_path / "test.abi"
-        f.write_text("ecut 30\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n")
+        f.write_text('ecut 30\npseudos "Si.psp8"\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n')
         with patch("sys.stdout", new_callable=io.StringIO) as out:
             lint_main([str(f), "--json"])
         data = json.loads(out.getvalue())
@@ -34,7 +34,7 @@ class TestLintCLI:
 
     def test_directory_mode(self, tmp_path: Path) -> None:
         f = tmp_path / "test.abi"
-        f.write_text("ecut 30\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n")
+        f.write_text('ecut 30\npseudos "Si.psp8"\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n')
         assert lint_main([str(tmp_path)]) == 0
 
 
@@ -56,13 +56,13 @@ class TestFmtCLI:
 class TestTestCLI:
     def test_static_delegates_to_lint(self, tmp_path: Path) -> None:
         f = tmp_path / "test.abi"
-        f.write_text("ecut 30\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n")
+        f.write_text('ecut 30\npseudos "Si.psp8"\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n')
         rc = cli_test_main(["static", str(f)])
         assert rc == 0
 
     def test_static_json(self, tmp_path: Path) -> None:
         f = tmp_path / "test.abi"
-        f.write_text("ecut 30\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n")
+        f.write_text('ecut 30\npseudos "Si.psp8"\nnatom 1\ntypat 1\nznucl 1\nxred 0 0 0\n')
         with patch("sys.stdout", new_callable=io.StringIO):
             rc = cli_test_main(["static", str(f), "--json"])
         assert rc == 0

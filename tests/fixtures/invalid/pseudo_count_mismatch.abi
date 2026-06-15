@@ -1,0 +1,14 @@
+# ABINIT input with pseudo count mismatch - should trigger ABINIT110
+# ntypat=2 requires 2 pseudopotentials, but we only specify 1
+
+natom 2
+ntypat 2
+typat 1 2
+znucl 14.0 8.0
+pseudos "Si.psp4"
+ecut 20.0
+kptopt 1
+nkpt 1
+kpt 0.25 0.25 0.25
+nstep 100
+toldfe 1.0d-6
