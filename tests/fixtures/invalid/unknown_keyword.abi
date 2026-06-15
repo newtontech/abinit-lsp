@@ -1,0 +1,11 @@
+# Canonical invalid ABINIT input: non-blocking warning.
+# Source: derived from tests/fixtures/bad_unknown_keyword.abi
+# Expectation: abinit-lsp-tool check returns ABINIT107 with
+# severity=warning, blocking=false,
+# source_provenance.url=https://docs.abinit.org/variables/
+ecut    30.0
+unknownkeyword 42
+natom   1
+typat   1
+znucl   14
+xred    0.0 0.0 0.0

@@ -1,0 +1,11 @@
+# Canonical invalid ABINIT input: blocking error.
+# Source: derived from tests/fixtures/rules/inconsistent_typat_znucl.abi
+# Expectation: abinit-lsp-tool check returns ABINIT103 with
+# severity=error, blocking=true,
+# source_provenance.url=https://docs.abinit.org/variables/typat/
+ecut    30.0
+natom   3
+ntypat  2
+typat   1 2 3
+znucl   14 8
+xred    0.0 0.0 0.0  0.25 0.25 0.25  0.5 0.5 0.5

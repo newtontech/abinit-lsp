@@ -90,6 +90,11 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
     Returns:
         A list of Diagnostic objects for any issues found.
     """
+    # Imported lazily to avoid a circular import: lint.py imports parser.py
+    # and parser.py does not import log_parser, but log_parser importing lint
+    # at module load would pull parser -> lint -> ... chains eagerly.
+    from .lint import enrich_diagnostic_provenance
+
     diagnostics: list[Diagnostic] = []
     lines = content.splitlines()
 
@@ -98,23 +103,25 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
         for _label, pattern in _SCF_NOT_CONVERGED_PATTERNS:
             if pattern.match(line):
                 diagnostics.append(
-                    Diagnostic(
-                        code="ABINIT200",
-                        severity="error",
-                        message="SCF convergence failure in ABINIT run",
-                        file=str(path),
-                        line=line_no,
-                        evidence=[line.strip()],
-                        suggested_fix={
-                            "kind": "fix_scf_convergence",
-                            "hints": [
-                                "increase nstep",
-                                "tighten tolerance (toldfe/tolvrs)",
-                                "adjust diemix",
-                                "check initial guess",
-                            ],
-                        },
-                        confidence=0.95,
+                    enrich_diagnostic_provenance(
+                        Diagnostic(
+                            code="ABINIT200",
+                            severity="error",
+                            message="SCF convergence failure in ABINIT run",
+                            file=str(path),
+                            line=line_no,
+                            evidence=[line.strip()],
+                            suggested_fix={
+                                "kind": "fix_scf_convergence",
+                                "hints": [
+                                    "increase nstep",
+                                    "tighten tolerance (toldfe/tolvrs)",
+                                    "adjust diemix",
+                                    "check initial guess",
+                                ],
+                            },
+                            confidence=0.95,
+                        )
                     )
                 )
                 break  # One diagnostic per line at most
@@ -123,14 +130,16 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
         for _label, pattern in _ERROR_PATTERNS:
             if pattern.match(line):
                 diagnostics.append(
-                    Diagnostic(
-                        code="ABINIT201",
-                        severity="error",
-                        message=f"ABINIT runtime error: {line.strip()}",
-                        file=str(path),
-                        line=line_no,
-                        evidence=[line.strip()],
-                        confidence=0.9,
+                    enrich_diagnostic_provenance(
+                        Diagnostic(
+                            code="ABINIT201",
+                            severity="error",
+                            message=f"ABINIT runtime error: {line.strip()}",
+                            file=str(path),
+                            line=line_no,
+                            evidence=[line.strip()],
+                            confidence=0.9,
+                        )
                     )
                 )
                 break
