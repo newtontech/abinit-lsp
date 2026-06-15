@@ -99,6 +99,11 @@
     {
       "kind": "wiki_manifest",
       "label": "ABINIT Upstream Sources Manifest",
+      "path": "raw/assets/manifest.json"
+    },
+    {
+      "kind": "wiki_index",
+      "label": "ABINIT Upstream Sources Index",
       "path": "raw/assets/upstream-sources.md"
     }
   ]
