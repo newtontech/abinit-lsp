@@ -154,6 +154,25 @@ def test_capabilities_payload_advertises_canonical_fixture_paths() -> None:
     assert "tests/fixtures/logs" in fixture_paths["logs"]
 
 
+def test_provenance_manifest_exists_and_links_official_docs() -> None:
+    """raw/assets/manifest.json records official doc anchors with checksums."""
+    manifest_path = REPO_ROOT / "raw" / "assets" / "manifest.json"
+    assert manifest_path.is_file(), "missing raw/assets/manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest.get("schema_version") == "provenance-manifest-v1"
+    anchors = manifest.get("official_source_anchors", [])
+    assert any(a.get("url") == "https://docs.abinit.org/variables/" for a in anchors)
+    entries = manifest.get("entries", [])
+    assert len(entries) >= 5
+    capabilities = json.loads((REPO_ROOT / "lsp-capabilities.json").read_text())
+    provenance_paths = {
+        item.get("path")
+        for item in capabilities.get("sourceProvenance", [])
+        if item.get("path")
+    }
+    assert "raw/assets/manifest.json" in provenance_paths
+
+
 def test_rule_manifest_carries_provenance_for_every_rule() -> None:
     """Every rule in the manifest must trace to an official source URL."""
     from abinit_lsp.lint import get_rule_manifest

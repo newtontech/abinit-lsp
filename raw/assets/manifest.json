@@ -1,0 +1,134 @@
+{
+  "manifest_version": "1.0.0",
+  "schema_version": "provenance-manifest-v1",
+  "created_at": "2026-06-15T00:00:00Z",
+  "repository": "newtontech/abinit-lsp",
+  "pipeline": "official-docs -> raw/assets -> wiki/entities+concepts+synthesis -> versioned schema/rules -> provenance -> fixtures/eval -> LSP runtime/OpenQC integration",
+  "official_source_anchors": [
+    {
+      "name": "ABINIT Input Variables",
+      "type": "official_docs",
+      "url": "https://docs.abinit.org/variables/",
+      "retrieval_date": "2026-06-12",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "notes": "Canonical variable reference for lint rules and hover"
+    },
+    {
+      "name": "ABINIT Tutorials",
+      "type": "official_docs",
+      "url": "https://docs.abinit.org/tutorial/",
+      "retrieval_date": "2026-06-12",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "notes": "Worked examples for fixture derivation"
+    },
+    {
+      "name": "ABINIT Theory",
+      "type": "official_docs",
+      "url": "https://docs.abinit.org/theory/",
+      "retrieval_date": "2026-06-12",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "notes": "Background for wiki concept pages"
+    }
+  ],
+  "entries": [
+    {
+      "path": "upstream-sources.md",
+      "source_type": "official_docs_index",
+      "source_url": "https://docs.abinit.org/",
+      "retrieval_date": "2026-06-12",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "checksum_sha256": "d4e6be26c64134aa4ef704acf7ee9de6237ceaee709d07dfdc460ea2cf0ee719",
+      "stable_id": "abinit-upstream-sources-v1",
+      "role": "provenance_index",
+      "wiki_links": ["wiki/entities/ABINIT.md", "wiki/synthesis/openqc-agent-context.md"]
+    },
+    {
+      "path": "examples-silicon-scf.abi",
+      "source_type": "official_docs_example",
+      "source_url": "https://docs.abinit.org/tutorial/base1/",
+      "retrieval_date": "2026-06-13",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "checksum_sha256": "b510a32ce46126da9e85eb576cb37caf6cd4028533c4adbdd00130d59b17effa",
+      "stable_id": "abinit-examples-silicon-scf-v1",
+      "role": "valid_fixture_source",
+      "wiki_links": ["wiki/entities/ecut.md", "wiki/entities/natom.md"]
+    },
+    {
+      "path": "examples-relaxation.abi",
+      "source_type": "official_docs_example",
+      "source_url": "https://docs.abinit.org/tutorial/",
+      "retrieval_date": "2026-06-13",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "checksum_sha256": "974ccfb47f7371d5eb7d6986c32f16e2ade4a7c8b6849b3d67f1f9be3791d371",
+      "stable_id": "abinit-examples-relaxation-v1",
+      "role": "tutorial_example",
+      "wiki_links": ["wiki/synthesis/openqc-agent-context.md"]
+    },
+    {
+      "path": "examples-multidataset.abi",
+      "source_type": "official_docs_example",
+      "source_url": "https://docs.abinit.org/variables/ndtset/",
+      "retrieval_date": "2026-06-13",
+      "software_version": "9.x",
+      "license": "CC-BY-4.0",
+      "checksum_sha256": "dca11a652b107e1c8525b214f980e8865995f32e82c9d986b4ef6e25dc5995d6",
+      "stable_id": "abinit-examples-multidataset-v1",
+      "role": "tutorial_example",
+      "wiki_links": ["wiki/entities/ABINIT.md"]
+    },
+    {
+      "path": "diagnostic-engine-v1.schema.json",
+      "source_type": "internal_schema",
+      "source_url": null,
+      "retrieval_date": "2026-06-12",
+      "software_version": "1.0",
+      "license": "internal",
+      "checksum_sha256": "323191fccb3665be90c7bbd5abb8ce5d90c97c56321ac9d533b960a27f9154f3",
+      "stable_id": "diagnostic-engine-v1-schema",
+      "role": "diagnostic_schema",
+      "wiki_links": ["wiki/concepts/diagnostic-engine-v1.md"]
+    },
+    {
+      "path": "DIAGNOSTIC_ENGINE_V1.md",
+      "source_type": "internal_doc",
+      "source_url": null,
+      "retrieval_date": "2026-06-12",
+      "software_version": "1.0",
+      "license": "internal",
+      "checksum_sha256": "1a18f85342ac1a82a0a67726197430a4370138a59d8783b6d7ad236583b9b683",
+      "stable_id": "diagnostic-engine-v1-doc",
+      "role": "architecture_doc",
+      "wiki_links": ["wiki/concepts/diagnostic-engine-v1.md"]
+    },
+    {
+      "path": "README.md",
+      "source_type": "project_readme",
+      "source_url": null,
+      "retrieval_date": "2026-06-12",
+      "software_version": "1.0",
+      "license": "internal",
+      "checksum_sha256": "65183dd973ebc2b88b4ab1e91beb7a151c15a27cc73bf11d5940def7632a7e65",
+      "stable_id": "abinit-lsp-raw-readme",
+      "role": "project_overview",
+      "wiki_links": []
+    },
+    {
+      "path": "AGENTS.md",
+      "source_type": "governance",
+      "source_url": null,
+      "retrieval_date": "2026-06-15",
+      "software_version": "1.0",
+      "license": "internal",
+      "checksum_sha256": "498d47546310ae81010d5462f45dd4977f5e8b5e84c1218c64a15ae956ed7286",
+      "stable_id": "abinit-agents-md",
+      "role": "governance",
+      "wiki_links": []
+    }
+  ]
+}

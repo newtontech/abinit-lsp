@@ -26,6 +26,20 @@
 - Updated `lsp-capabilities.json` sourceProvenance with additional upstream URLs
 - Hover docs in `completion.py` now traceable to wiki via upstream-sources.md manifest
 
+## 2026-06-15 - Provenance manifest digest (#35)
+
+**Scope**: Add structured `raw/assets/manifest.json`, refresh script, and fleet
+provenance linkage for OpenQC `lsp:check-family`.
+
+**Content Added**:
+- `raw/assets/manifest.json` — checksum-backed provenance manifest
+- `scripts/refresh-wiki-digest.sh` — verify captured assets + wiki lint
+- `VERSION`, `CHANGELOG.md` — release metadata for family gate
+
+**LSP-facing Update**:
+- `lsp-capabilities.json` `sourceProvenance` references `raw/assets/manifest.json`
+- `tests/test_closed_loop_fixtures.py` asserts manifest presence and linkage
+
 ## 2025-06-12 - Initial Wiki Creation
 
 **Scope**: Created LLM Wiki knowledge base for ABINIT LSP project.
