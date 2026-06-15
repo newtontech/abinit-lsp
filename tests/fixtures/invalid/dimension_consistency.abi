@@ -1,0 +1,14 @@
+# ABINIT input with dimension inconsistency - should trigger ABINIT112
+# natom is 2 in dataset 1 but 3 in dataset 2
+
+natom 2
+ntypat 1
+typat 1 1
+znucl 14.0
+ecut 20.0
+nstep 100
+toldfe 1.0d-6
+ndtset 2
+
+natom2 3
+typat2 1 1 1

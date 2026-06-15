@@ -48,36 +48,132 @@ _SCF_NOT_CONVERGED_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 # General error patterns
-_ERROR_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+_ERROR_PATTERNS: list[tuple[str, re.Pattern[str], str, str | None]] = [
     (
         "allocation_error",
         re.compile(r"^\s*Allocation error", re.IGNORECASE),
+        "ABINIT201",
+        "Memory allocation failed during execution",
     ),
     (
         "input_error",
         re.compile(r"^\s*.*Action : check.*input file", re.IGNORECASE),
+        "ABINIT202",
+        "Input file validation failed",
     ),
     (
         "malloc_error",
         re.compile(r"^\s*.*malloc.*failed", re.IGNORECASE),
+        "ABINIT201",
+        "Memory allocation (malloc) failed",
     ),
     (
         "file_not_found",
         re.compile(r"^\s*.*file.*not found", re.IGNORECASE),
+        "ABINIT203",
+        "Required file not found",
     ),
     (
         "mpi_error",
         re.compile(r"^\s*.*MPI.*error", re.IGNORECASE),
+        "ABINIT204",
+        "MPI communication error",
     ),
     (
         "fatal_error",
         re.compile(r"^\s*.*Fatal error", re.IGNORECASE),
+        "ABINIT205",
+        "Fatal runtime error",
     ),
     (
         "stopped",
         re.compile(r"^\s*.*Stopped.*at.*iteration", re.IGNORECASE),
+        "ABINIT200",
+        "ABINIT stopped at an iteration",
+    ),
+    (
+        "segfault",
+        re.compile(r"^\s*.*segmentation fault", re.IGNORECASE),
+        "ABINIT206",
+        "Segmentation fault detected",
+    ),
+    (
+        "pseudopotential_error",
+        re.compile(r"^\s*.*pseudopotential.*error", re.IGNORECASE),
+        "ABINIT207",
+        "Pseudopotential loading or parsing error",
+    ),
+    (
+        "divergence",
+        re.compile(r"^\s*.*divergence.*detected", re.IGNORECASE),
+        "ABINIT208",
+        "Numerical divergence detected",
+    ),
+    (
+        "memory_exceeded",
+        re.compile(r"^\s*.*memory.*exceeded", re.IGNORECASE),
+        "ABINIT209",
+        "Memory limit exceeded",
     ),
 ]
+
+
+_LOG_ERROR_FIXES: dict[str, dict[str, object]] = {
+    "ABINIT201": {
+        "kind": "fix_memory_allocation",
+        "hints": ["reduce npband/npfft", "decrease FFT mesh", "check memory limits"],
+    },
+    "ABINIT202": {
+        "kind": "fix_input_validation",
+        "hints": ["check input syntax", "verify variable names", "validate dataset structure"],
+    },
+    "ABINIT203": {
+        "kind": "fix_file_not_found",
+        "hints": ["verify file paths", "check working directory", "ensure pseudopotentials exist"],
+    },
+    "ABINIT204": {
+        "kind": "fix_mpi_error",
+        "hints": ["check MPI configuration", "verify processor count", "check interconnect"],
+    },
+    "ABINIT205": {
+        "kind": "fix_fatal_error",
+        "hints": [
+            "check log for details",
+            "verify input parameters",
+            "check ABINIT version compatibility",
+        ],
+    },
+    "ABINIT206": {
+        "kind": "fix_segmentation_fault",
+        "hints": ["check array bounds", "verify memory allocation", "check input dimensions"],
+    },
+    "ABINIT207": {
+        "kind": "fix_pseudopotential_error",
+        "hints": [
+            "verify pseudo file format",
+            "check pseudo type compatibility",
+            "download fresh pseudos",
+        ],
+    },
+    "ABINIT208": {
+        "kind": "fix_divergence",
+        "hints": ["reduce mixing parameter", "check initial guess", "use different xc functional"],
+    },
+    "ABINIT209": {
+        "kind": "fix_memory_exceeded",
+        "hints": [
+            "reduce k-points",
+            "decrease cutoff energy",
+            "use fewer bands",
+            "increase system memory",
+        ],
+    },
+}
+
+
+def _suggested_fix_for_log_error(code: str) -> dict[str, object] | None:
+    """Return a suggested fix envelope for a known log error code."""
+    return _LOG_ERROR_FIXES.get(code)
 
 
 def parse_log(content: str, path: Path) -> list[Diagnostic]:
@@ -127,17 +223,18 @@ def parse_log(content: str, path: Path) -> list[Diagnostic]:
                 break  # One diagnostic per line at most
 
         # Check general errors
-        for _label, pattern in _ERROR_PATTERNS:
+        for _label, pattern, code, message in _ERROR_PATTERNS:
             if pattern.match(line):
                 diagnostics.append(
                     enrich_diagnostic_provenance(
                         Diagnostic(
-                            code="ABINIT201",
+                            code=code,
                             severity="error",
-                            message=f"ABINIT runtime error: {line.strip()}",
+                            message=message or f"ABINIT runtime error: {line.strip()}",
                             file=str(path),
                             line=line_no,
                             evidence=[line.strip()],
+                            suggested_fix=_suggested_fix_for_log_error(code),
                             confidence=0.9,
                         )
                     )

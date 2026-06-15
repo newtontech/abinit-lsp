@@ -25,6 +25,9 @@ RULE_BAD_MULTIDATASET_SUFFIX = "abinit.multidataset.bad_suffix"
 RULE_LOOSE_TOLERANCE = "abinit.scf.loose_tolerance"
 RULE_UNKNOWN_KEYWORD = "abinit.input.unknown_keyword"
 RULE_DUPLICATE_KEYWORD = "abinit.input.duplicate_keyword"
+RULE_MISSING_PSEUDOS = "abinit.structure.missing_pseudos"
+RULE_PSEUDO_COUNT_MISMATCH = "abinit.structure.pseudo_count_mismatch"
+RULE_DEPRECATED_VARIABLE = "abinit.variable.deprecated"
 
 # Type expectations for known keywords.
 _INT_KEYWORDS: set[str] = {
@@ -172,6 +175,34 @@ RULE_MANIFEST: list[RuleInfo] = [
         "keyword is defined more than once",
         "official",
     ),
+    RuleInfo(
+        RULE_MISSING_PSEUDOS,
+        "ABINIT109",
+        "error",
+        "pseudos keyword is required to specify pseudopotential files",
+        "official",
+    ),
+    RuleInfo(
+        RULE_PSEUDO_COUNT_MISMATCH,
+        "ABINIT110",
+        "error",
+        "number of pseudopotential files must match ntypat",
+        "official",
+    ),
+    RuleInfo(
+        RULE_DEPRECATED_VARIABLE,
+        "ABINIT111",
+        "warning",
+        "variable is deprecated in recent ABINIT versions",
+        "official",
+    ),
+    RuleInfo(
+        "abinit.multidataset.dimension_consistency",
+        "ABINIT112",
+        "warning",
+        "dimension variable has conflicting values across datasets",
+        "official",
+    ),
 ]
 
 
@@ -296,6 +327,43 @@ RULE_PROVENANCE: dict[str, dict[str, Any]] = {
             "role": "input-syntax",
         },
         "manual_ref": _ABINIT_SYNTAX_REF,
+    },
+    "ABINIT109": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT variable: pseudos",
+            "url": f"{_ABINIT_VAR_BASE}pseudos/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}pseudos/",
+    },
+    "ABINIT110": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT variable: pseudos",
+            "url": f"{_ABINIT_VAR_BASE}pseudos/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}pseudos/",
+    },
+    "ABINIT111": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT input variables index",
+            "url": _ABINIT_VAR_BASE,
+            "role": "input-variable",
+        },
+        "manual_ref": _ABINIT_VAR_BASE,
+        "version_scope": {"deprecated_since": "abinit >=9.0"},
+    },
+    "ABINIT112": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT multi-dataset variables",
+            "url": f"{_ABINIT_VAR_BASE}ndtset/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}ndtset/",
     },
     "ABINIT201": {
         "source_provenance": {
@@ -777,6 +845,198 @@ def check_duplicate_keywords(af: AbinitFile, path: Path) -> list[Diagnostic]:
 
 
 # ---------------------------------------------------------------------------
+# Pseudopotential checks
+# ---------------------------------------------------------------------------
+
+
+def check_missing_pseudos(af: AbinitFile, path: Path) -> list[Diagnostic]:
+    """ABINIT109: pseudos keyword is required for pseudopotential calculations."""
+    if af.has_keyword("pseudos"):
+        return []
+    return [
+        Diagnostic(
+            code="ABINIT109",
+            severity="error",
+            message="pseudos keyword is required to specify pseudopotential files",
+            file=str(path),
+            line=1,
+            evidence=["ABINIT requires pseudos to specify pseudopotential file(s)"],
+            suggested_fix={"kind": "add_required_token", "token": "pseudos"},
+            confidence=0.9,
+        )
+    ]
+
+
+def check_pseudo_count_mismatch(af: AbinitFile, path: Path) -> list[Diagnostic]:
+    """ABINIT110: number of pseudopotential files must match ntypat."""
+    diagnostics: list[Diagnostic] = []
+
+    ntypat_entries = af.get_entries_for("ntypat")
+    pseudos_entries = af.get_entries_for("pseudos")
+
+    if not ntypat_entries or not pseudos_entries:
+        return []
+
+    try:
+        ntypat_val = int(float(ntypat_entries[0].values[0]))
+    except (ValueError, IndexError):
+        return []
+
+    for entry in pseudos_entries:
+        if not entry.values:
+            continue
+
+        pseudo_count = 0
+        for val in entry.values:
+            if val.startswith('"') or val.startswith("'"):
+                pseudo_count += 1
+            elif "," in val:
+                pseudo_count += len([p for p in val.split(",") if p.strip()])
+            elif val.isdigit():
+                pseudo_count += int(val)
+            else:
+                pseudo_count += 1
+
+        if pseudo_count != ntypat_val and pseudo_count > 0:
+            diagnostics.append(
+                Diagnostic(
+                    code="ABINIT110",
+                    severity="error",
+                    message=(f"pseudos has {pseudo_count} entries but ntypat={ntypat_val}"),
+                    file=str(path),
+                    line=entry.line,
+                    suggested_fix={
+                        "kind": "fix_pseudo_count",
+                        "pseudo_count": pseudo_count,
+                        "ntypat": ntypat_val,
+                    },
+                    confidence=0.85,
+                )
+            )
+
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
+# Dataset dimension consistency checks
+# ---------------------------------------------------------------------------
+
+# Key dimension variables that must be consistent across datasets
+_DIMENSION_VARIABLES = {
+    "natom",
+    "ntypat",
+    "nband",
+    "nkpt",
+    "nsppol",
+    "nspinor",
+    "nspden",
+}
+
+
+def check_dataset_dimension_consistency(af: AbinitFile, path: Path) -> list[Diagnostic]:
+    """Check that dimension variables are consistent across datasets."""
+    diagnostics: list[Diagnostic] = []
+
+    # Group entries by base keyword
+    entries_by_keyword: dict[str, list[tuple[int | None, Any]]] = {}
+    for entry in af.entries:
+        base = entry.base_keyword
+        if base in _DIMENSION_VARIABLES and entry.values:
+            entries_by_keyword.setdefault(base, []).append((entry.dataset, entry.values))
+
+    # Check for conflicting values across datasets
+    for keyword, dataset_values in entries_by_keyword.items():
+        if len(dataset_values) < 2:
+            continue
+
+        # Collect values per dataset
+        values_by_ds: dict[int | None, str] = {}
+        for ds, values in dataset_values:
+            if ds is not None:
+                values_by_ds[ds] = values[0] if values else ""
+
+        # Check for conflicts between datasets
+        unique_values = set(values_by_ds.values())
+        if len(unique_values) > 1:
+            # Find the conflicting datasets
+            value_to_ds: dict[str, list[int | None]] = {}
+            for ds, val in values_by_ds.items():
+                value_to_ds.setdefault(val, []).append(ds)
+
+            conflicting = [v for v, ds_list in value_to_ds.items() if len(ds_list) > 0]
+            if len(conflicting) > 1:
+                diagnostics.append(
+                    Diagnostic(
+                        code="ABINIT112",
+                        severity="warning",
+                        message=(
+                            f"dimension variable '{keyword}' has conflicting "
+                            f"values across datasets: {values_by_ds}"
+                        ),
+                        file=str(path),
+                        line=dataset_values[0][0] if dataset_values[0][0] is not None else 1,
+                        suggested_fix={
+                            "kind": "check_dimension_consistency",
+                            "variable": keyword,
+                            "values_by_dataset": values_by_ds,
+                        },
+                        confidence=0.85,
+                    )
+                )
+
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
+# Deprecated variable checks
+# ---------------------------------------------------------------------------
+
+# Variables deprecated in ABINIT >= 9.0
+_DEPRECATED_VARIABLES = {
+    "ixc",
+    "rprim",
+    "rprimd",
+    "symrel",
+    "tnons",
+    "ngfft",
+    "wvl",
+    "wvl_hgrid",
+    "wvl_nprCC",
+    "wvl_prtvol",
+    "wvl_crmult",
+    "wvl_frmult",
+    "use_slk",
+}
+
+
+def check_deprecated_variables(af: AbinitFile, path: Path) -> list[Diagnostic]:
+    """ABINIT111: flag deprecated ABINIT variables."""
+    diagnostics: list[Diagnostic] = []
+    seen: dict[str, int] = {}
+
+    for entry in af.entries:
+        base = entry.base_keyword
+        if base in _DEPRECATED_VARIABLES and base not in seen:
+            seen[base] = entry.line
+            diagnostics.append(
+                Diagnostic(
+                    code="ABINIT111",
+                    severity="warning",
+                    message=(f"variable '{base}' is deprecated in recent ABINIT versions"),
+                    file=str(path),
+                    line=entry.line,
+                    suggested_fix={
+                        "kind": "check_deprecated",
+                        "variable": base,
+                    },
+                    confidence=0.7,
+                )
+            )
+
+    return diagnostics
+
+
+# ---------------------------------------------------------------------------
 # Main lint entry point
 # ---------------------------------------------------------------------------
 
@@ -810,6 +1070,10 @@ def lint_file(path: Path) -> list[Diagnostic]:
     diagnostics.extend(check_loose_tolerance(af, path))
     diagnostics.extend(check_unknown_keywords(af, path))
     diagnostics.extend(check_duplicate_keywords(af, path))
+    diagnostics.extend(check_missing_pseudos(af, path))
+    diagnostics.extend(check_pseudo_count_mismatch(af, path))
+    diagnostics.extend(check_deprecated_variables(af, path))
+    diagnostics.extend(check_dataset_dimension_consistency(af, path))
 
     # Enrich every emitted diagnostic with rule-code-keyed provenance so the
     # DiagnosticEnvelope/v1 payload carries the official docs anchor and the

@@ -1,0 +1,13 @@
+ .Version 10.0.5 of ABINIT
+.(MPI version, prepared for a x86_64_linux_gnu9.2 cluster)
+
+ DATASET  1 : electron ground-state calculation
+
+---SELF-CONSISTENT-FIELD CONVERGENCE--------------------------------------------
+
+ iter   Etot(hartree)      deltaE(h)  residm    vres2   nres2
+ ETOT 1  -7.7996042943633    -7.7996  2.509E+00 3.496E+01 1.264E+02
+ ETOT 2  -7.9096187337033    -0.1100  1.858E+00 3.079E+01 1.089E+02
+
+forrtl: error (69): process interrupted (SIGSEGV)
+Segmentation fault

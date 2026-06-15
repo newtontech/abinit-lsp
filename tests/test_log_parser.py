@@ -53,7 +53,7 @@ class TestRuntimeErrors:
     def test_fatal_error(self) -> None:
         content = " Fatal error encountered. Stopping.\n"
         diags = parse_log(content, Path("test.out"))
-        assert any(d.code == "ABINIT201" for d in diags)
+        assert any(d.code == "ABINIT205" for d in diags)
 
     def test_allocation_error(self) -> None:
         content = "Allocation error: not enough memory\n"
@@ -63,7 +63,7 @@ class TestRuntimeErrors:
     def test_file_not_found(self) -> None:
         content = "  Pseudopotential file not found: si.psp8\n"
         diags = parse_log(content, Path("test.out"))
-        assert any(d.code == "ABINIT201" for d in diags)
+        assert any(d.code == "ABINIT203" for d in diags)
 
     def test_clean_run_no_errors(self) -> None:
         content = """ .Version 10.0.5 of ABINIT

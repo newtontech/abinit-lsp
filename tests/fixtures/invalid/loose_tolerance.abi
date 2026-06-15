@@ -4,6 +4,7 @@
 # severity=warning, blocking=false,
 # source_provenance.url=https://docs.abinit.org/variables/toldfe/
 ecut    30.0
+pseudos "Si.psp8"
 natom   1
 typat   1
 znucl   14

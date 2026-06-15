@@ -1,5 +1,21 @@
 [
   {
+    "code": "ABINIT109",
+    "column": 1,
+    "confidence": 0.9,
+    "evidence": [
+      "ABINIT requires pseudos to specify pseudopotential file(s)"
+    ],
+    "file": "tests/fixtures/rules/invalid_variable_type.abi",
+    "line": 1,
+    "message": "pseudos keyword is required to specify pseudopotential files",
+    "severity": "error",
+    "suggested_fix": {
+      "kind": "add_required_token",
+      "token": "pseudos"
+    }
+  },
+  {
     "code": "ABINIT104",
     "column": 1,
     "confidence": 0.95,

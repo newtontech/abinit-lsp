@@ -1,0 +1,14 @@
+# ABINIT input with deprecated variables - should trigger ABINIT111
+# rprim and ixc are deprecated in recent ABINIT versions
+
+natom 1
+ntypat 1
+typat 1
+znucl 14.0
+ecut 20.0
+rprim 1.0 0.0 0.0
+     0.0 1.0 0.0
+     0.0 0.0 1.0
+ixc 1
+nstep 100
+toldfe 1.0d-6
