@@ -1,0 +1,7 @@
+# Canonical invalid ABINIT input: blocking error.
+# Source: derived from tests/fixtures/bad_structure.abi
+# Expectation: abinit-lsp-tool check returns ABINIT102 (natom missing) with
+# severity=error, blocking=true, source_provenance.url=https://docs.abinit.org/variables/natom/
+ecut    30.0
+nstep   100
+toldfe  1.0e-8

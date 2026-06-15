@@ -1,0 +1,13 @@
+# Canonical invalid ABINIT input: non-blocking warning.
+# Source: derived from tests/fixtures/rules/loose_tolerance.abi
+# Expectation: abinit-lsp-tool check returns ABINIT106 with
+# severity=warning, blocking=false,
+# source_provenance.url=https://docs.abinit.org/variables/toldfe/
+ecut    30.0
+natom   1
+typat   1
+znucl   14
+xred    0.0 0.0 0.0
+toldfe  1.0e-2
+tolmxf  5.0e-2
+nstep   100

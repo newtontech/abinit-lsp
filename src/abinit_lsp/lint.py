@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 from .diagnostics import Diagnostic
 from .parser import AbinitFile, parse_content
@@ -174,18 +175,208 @@ RULE_MANIFEST: list[RuleInfo] = [
 ]
 
 
-def get_rule_manifest() -> list[dict[str, str]]:
-    """Return the rule manifest as a list of dicts for JSON export."""
-    return [
-        {
+def get_rule_manifest() -> list[dict[str, Any]]:
+    """Return the rule manifest as a list of dicts for JSON export.
+
+    Each entry carries the stable rule_id, the legacy short code, severity,
+    blocking policy, source provenance URL, version scope, and a description.
+    OpenQC consumers and the agent CLI read this manifest so every diagnostic
+    can be traced from rule_id -> official source.
+    """
+    enriched: list[dict[str, Any]] = []
+    for r in RULE_MANIFEST:
+        prov = RULE_PROVENANCE.get(r.code, {})
+        entry: dict[str, Any] = {
             "rule_id": r.rule_id,
             "code": r.code,
             "severity": r.severity,
             "description": r.description,
             "source": r.source,
+            "blocking": _severity_blocks(r.severity),
         }
-        for r in RULE_MANIFEST
-    ]
+        if prov:
+            entry["source_provenance"] = prov.get("source_provenance")
+            entry["manual_ref"] = prov.get("manual_ref")
+            if prov.get("version_scope"):
+                entry["version_scope"] = prov.get("version_scope")
+        enriched.append(entry)
+    return enriched
+
+
+# ---------------------------------------------------------------------------
+# Source provenance for diagnostic codes
+# ---------------------------------------------------------------------------
+#
+# Maps the legacy short code (e.g. ABINIT101) to its official ABINIT docs
+# anchor and the rule's version scope. Provenance is sourced from
+# ``raw/assets/upstream-sources.md`` which records the canonical URLs from
+# https://docs.abinit.org/variables/. ``check_missing_ecut`` and friends emit
+# the short code; ``_enrich_provenance`` decorates the diagnostic with the
+# provenance fields so the DiagnosticEnvelope/v1 payload carries them.
+
+_ABINIT_VAR_BASE = "https://docs.abinit.org/variables/"
+_ABINIT_SYNTAX_REF = "https://docs.abinit.org/users/"
+_ABINIT_TUTORIAL_REF = "https://docs.abinit.org/tutorial/base1/"
+
+
+# Static per-code provenance and version scope. Values map directly to the
+# official docs anchors recorded in raw/assets/upstream-sources.md. The
+# version_scope field uses ABINIT's documented introduction version where
+# known; absent means "documented since the public web docs were indexed".
+RULE_PROVENANCE: dict[str, dict[str, Any]] = {
+    "ABINIT101": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT variable: ecut",
+            "url": f"{_ABINIT_VAR_BASE}ecut/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}ecut/",
+        "version_scope": {"since": "abinit >=4.0"},
+    },
+    "ABINIT102": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT variable: natom",
+            "url": f"{_ABINIT_VAR_BASE}natom/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}natom/",
+    },
+    "ABINIT103": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT variables: typat, znucl, ntypat",
+            "url": f"{_ABINIT_VAR_BASE}typat/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}typat/",
+    },
+    "ABINIT104": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT input variable types",
+            "url": _ABINIT_VAR_BASE,
+            "role": "input-variable",
+        },
+        "manual_ref": _ABINIT_VAR_BASE,
+    },
+    "ABINIT105": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT multi-dataset variables",
+            "url": f"{_ABINIT_VAR_BASE}ndtset/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}ndtset/",
+    },
+    "ABINIT106": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT SCF convergence variables",
+            "url": f"{_ABINIT_VAR_BASE}toldfe/",
+            "role": "input-variable",
+        },
+        "manual_ref": f"{_ABINIT_VAR_BASE}toldfe/",
+    },
+    "ABINIT107": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT input variables index",
+            "url": _ABINIT_VAR_BASE,
+            "role": "input-variable",
+        },
+        "manual_ref": _ABINIT_VAR_BASE,
+    },
+    "ABINIT108": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT input file syntax",
+            "url": _ABINIT_SYNTAX_REF,
+            "role": "input-syntax",
+        },
+        "manual_ref": _ABINIT_SYNTAX_REF,
+    },
+    "ABINIT201": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT user guide",
+            "url": _ABINIT_SYNTAX_REF,
+            "role": "input-syntax",
+        },
+        "manual_ref": _ABINIT_SYNTAX_REF,
+    },
+    "ABINIT202": {
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT input file format",
+            "url": _ABINIT_SYNTAX_REF,
+            "role": "input-syntax",
+        },
+        "manual_ref": _ABINIT_SYNTAX_REF,
+    },
+    "ABINIT200": {
+        # Emitted by log_parser for SCF convergence failures. ABINIT200 lives
+        # outside the input-rule rule_id namespace because it is a runtime
+        # diagnostic anchor: it reports a runtime outcome, not a syntactic
+        # input error.
+        "source_provenance": {
+            "kind": "official_docs",
+            "label": "ABINIT SCF convergence tutorial",
+            "url": _ABINIT_TUTORIAL_REF,
+            "role": "runtime-log",
+        },
+        "manual_ref": _ABINIT_TUTORIAL_REF,
+    },
+}
+
+
+def _severity_blocks(severity: str, confidence: float = 1.0) -> bool:
+    """Mirror rich_diagnostics blocking policy: errors with high confidence block."""
+    return severity == "error" and confidence >= 0.8
+
+
+def _enrich_provenance(diag: Diagnostic) -> Diagnostic:
+    """Return a copy of ``diag`` with source provenance fields populated.
+
+    Existing provenance is preserved so callers that already evidence a more
+    specific source (e.g. preflight version-aware checks) keep their richer
+    payload. Provenance lookup is by diagnostic short code.
+    """
+    return enrich_diagnostic_provenance(diag)
+
+
+def enrich_diagnostic_provenance(diag: Diagnostic) -> Diagnostic:
+    """Public helper used by other modules (log_parser, preflight helpers).
+
+    Returns ``diag`` unchanged when no provenance is available for its code.
+    """
+    prov = RULE_PROVENANCE.get(diag.code)
+    if not prov:
+        return diag
+    source_provenance = diag.source_provenance or prov.get("source_provenance")
+    manual_ref = diag.manual_ref or prov.get("manual_ref")
+    version_scope = diag.version_scope or prov.get("version_scope")
+    if (
+        source_provenance is diag.source_provenance
+        and manual_ref is diag.manual_ref
+        and version_scope is diag.version_scope
+    ):
+        return diag
+    return Diagnostic(
+        code=diag.code,
+        severity=diag.severity,
+        message=diag.message,
+        file=diag.file,
+        line=diag.line,
+        column=diag.column,
+        evidence=diag.evidence,
+        suggested_fix=diag.suggested_fix,
+        confidence=diag.confidence,
+        source_provenance=source_provenance,
+        manual_ref=manual_ref,
+        version_scope=version_scope,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -597,12 +788,14 @@ def lint_file(path: Path) -> list[Diagnostic]:
         content = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         return [
-            Diagnostic(
-                "ABINIT202",
-                "error",
-                "file is not valid UTF-8 text",
-                str(path),
-                1,
+            _enrich_provenance(
+                Diagnostic(
+                    "ABINIT202",
+                    "error",
+                    "file is not valid UTF-8 text",
+                    str(path),
+                    1,
+                )
             )
         ]
 
@@ -617,6 +810,12 @@ def lint_file(path: Path) -> list[Diagnostic]:
     diagnostics.extend(check_loose_tolerance(af, path))
     diagnostics.extend(check_unknown_keywords(af, path))
     diagnostics.extend(check_duplicate_keywords(af, path))
+
+    # Enrich every emitted diagnostic with rule-code-keyed provenance so the
+    # DiagnosticEnvelope/v1 payload carries the official docs anchor and the
+    # rule's version scope. Preflight diagnostics skip this path because they
+    # already provide richer provenance via preflight-specific emitters.
+    diagnostics = [_enrich_provenance(diag) for diag in diagnostics]
 
     return sorted(diagnostics, key=lambda d: (d.file, d.line, d.code))
 
@@ -641,12 +840,14 @@ def lint_path(path: Path) -> list[Diagnostic]:
             )
             if not found:
                 diagnostics.append(
-                    Diagnostic(
-                        code="ABINIT201",
-                        severity="error",
-                        message="no supported ABINIT files found",
-                        file=str(path),
-                        line=1,
+                    _enrich_provenance(
+                        Diagnostic(
+                            code="ABINIT201",
+                            severity="error",
+                            message="no supported ABINIT files found",
+                            file=str(path),
+                            line=1,
+                        )
                     )
                 )
         return sorted(diagnostics, key=lambda d: (d.file, d.line, d.code))
