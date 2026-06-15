@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "abinit-lsp"
-version = "0.1.1rc1"
+version = "0.1.1rc2"
 description = "Language Server Protocol and CLI tools for ABINIT input files"
 readme = "README.md"
 license = { text = "MIT" }

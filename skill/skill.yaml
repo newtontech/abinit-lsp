@@ -10,8 +10,8 @@ entrypoints:
   server: abinit-lsp
   tool: abinit-lsp-tool
 file_patterns:
-  - *.abi
-  - *.abinit
+  - "*.abi"
+  - "*.abinit"
 operations:
   - capabilities
   - check
