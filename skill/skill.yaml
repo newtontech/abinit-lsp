@@ -1,0 +1,31 @@
+schema: scientific-lsp-skill/v1
+name: abinit
+software: abinit
+display_name: ABINIT
+description: ABINIT input preflight for .abi and .abinit input files.
+package:
+  name: abinit-lsp
+  install: pip install abinit-lsp
+entrypoints:
+  server: abinit-lsp
+  tool: abinit-lsp-tool
+file_patterns:
+  - "*.abi"
+  - "*.abinit"
+operations:
+  - capabilities
+  - check
+  - context
+  - complete
+  - hover
+  - symbols
+  - fix
+diagnostic_contract: DiagnosticEnvelope/v1
+blocking_policy:
+  mode: fail-on-blocking
+  description: Use --fail-on-blocking when generated inputs must be launch-ready.
+source_provenance:
+  -
+    kind: official_docs
+    label: ABINIT Input Variables
+    url: https://docs.abinit.org/variables/

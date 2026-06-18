@@ -12,9 +12,9 @@ from typing import Any
 
 from .agent_operations import operation_path, with_capabilities
 from .rich_diagnostics import agent_check_payload
+from .skill_export import export_skill, skill_spec_text
 
 SOFTWARE = "abinit"
-
 
 def _capabilities_payload() -> dict[str, Any]:
     for parent in Path(__file__).resolve().parents:
@@ -54,7 +54,6 @@ def _capabilities_payload() -> dict[str, Any]:
         },
     }
 
-
 def _file_type(path: Path) -> str:
     name = path.name.upper()
     if name in {"INCAR", "POSCAR", "KPOINTS", "POTCAR", "CONTCAR"}:
@@ -63,12 +62,10 @@ def _file_type(path: Path) -> str:
         return path.suffix.lstrip(".").lower()
     return name.lower()
 
-
 def _collect_diagnostics(path: Path) -> list[Any]:
     from .lint import lint_path
 
     return list(lint_path(path))
-
 
 def _load_intent(path: Path) -> dict[str, Any] | None:
     """Load the optional preflight intent contract for a case directory.
@@ -90,7 +87,6 @@ def _load_intent(path: Path) -> dict[str, Any] | None:
         return None
     return data if isinstance(data, dict) else None
 
-
 def _looks_like_workspace(case_dir: Path) -> bool:
     """True when a directory is a real generated-input workspace.
 
@@ -108,7 +104,6 @@ def _looks_like_workspace(case_dir: Path) -> bool:
             return True
     return False
 
-
 def _collect_preflight(
     path: Path, intent: dict[str, Any] | None
 ) -> tuple[list[Any], list[dict[str, Any]], dict[str, Any]]:
@@ -125,7 +120,6 @@ def _collect_preflight(
     diagnostics, graph = preflight_diagnostics(case_dir, intent=intent)
     version_assumption = resolve_version_assumption(intent)
     return diagnostics, graph.to_json(), version_assumption
-
 
 def check_path(path: Path) -> dict[str, Any]:
     uri = path.resolve().as_uri()
@@ -154,7 +148,6 @@ def check_path(path: Path) -> dict[str, Any]:
     )
     return payload
 
-
 def preflight_path(path: Path) -> dict[str, Any]:
     """Return a preflight-only payload (universal checks, no legacy lint).
 
@@ -178,7 +171,6 @@ def preflight_path(path: Path) -> dict[str, Any]:
         artifacts=graph.to_json(),
     )
     return with_capabilities(payload, "preflight")
-
 
 def manifest_path(path: Path | None = None) -> dict[str, Any]:
     """Return the fleet preflight manifest.
@@ -206,7 +198,6 @@ def manifest_path(path: Path | None = None) -> dict[str, Any]:
                 fixtures = [item for item in data["fixtures"] if isinstance(item, dict)]
     return fleet_manifest(fixtures=fixtures)
 
-
 def _operation_payload(
     path: Path,
     operation: str,
@@ -223,10 +214,13 @@ def _operation_payload(
         character=character,
     )
 
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="abinit-lsp-tool")
     subparsers = parser.add_subparsers(dest="operation", required=True)
+    skill_spec = subparsers.add_parser("skill-spec")
+    skill_spec.add_argument("--format", choices=["json", "yaml"], default="json")
+    skill_export = subparsers.add_parser("skill-export")
+    skill_export.add_argument("--output", type=Path, required=True)
     capabilities = subparsers.add_parser("capabilities")
     capabilities.add_argument("--format", choices=["json"], default="json")
     for operation in (
@@ -266,6 +260,13 @@ def main(argv: list[str] | None = None) -> int:
             sub.add_argument("--fail-on-blocking", action="store_true")
     args = parser.parse_args(argv)
 
+    if args.operation == "skill-spec":
+        print(skill_spec_text(args.format))
+        return 0
+    if args.operation == "skill-export":
+        print(json.dumps(export_skill(args.output), indent=2, sort_keys=True))
+        return 0
+
     if args.operation == "capabilities":
         print(json.dumps(_capabilities_payload(), indent=2, sort_keys=True))
         return 0
@@ -284,7 +285,6 @@ def main(argv: list[str] | None = None) -> int:
     payload = _operation_payload(args.path, args.operation, args.line, args.character)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
