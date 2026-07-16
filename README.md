@@ -37,8 +37,14 @@ environment for server, agent, and fixture smoke tests. Only the protected
 `pypi` environment receives `id-token: write`; no long-lived PyPI token is
 stored.
 
-After this PR is merged and its release point is approved, create `v0.1.1` on
-the merge commit. Pull requests and ordinary branch pushes cannot publish.
+GitHub Release finalization is a sibling of PyPI publication: it consumes the
+same verified `python-distributions` artifact, validates the tag checkout
+against `GITHUB_SHA`, and can succeed even when PyPI trusted publishing is
+temporarily unavailable.
+
+For future versions, create the approved `v*` tag on the exact release
+commit. Pull requests and ordinary branch pushes cannot publish, and rerunning a
+completed tag does not create a duplicate GitHub Release.
 
 Diagnostic JSON uses the shared newtontech LSP shape: `file`, `line`, `column`, `severity`, `code`, `message`, `evidence`, `suggested_fix`, and `confidence`.
 
