@@ -145,6 +145,14 @@ def test_log_fixture_emits_runtime_diagnostic() -> None:
     assert diag["source_provenance"]["url"] == "https://docs.abinit.org/tutorial/base1/"
 
 
+def test_agent_cli_checks_runtime_log_fixture() -> None:
+    """The agent check operation routes ABINIT output files to the log parser."""
+    payload = _run_tool("check", str(LOG_DIR / "scf_not_converged.out"))
+    errors = [item for item in payload["diagnostics"] if item["code"] == "ABINIT200"]
+    assert errors, payload["diagnostics"]
+    assert payload["ok"] is False
+
+
 def test_capabilities_payload_advertises_canonical_fixture_paths() -> None:
     """lsp-capabilities.json must advertise the canonical fixture dirs."""
     capabilities = json.loads((REPO_ROOT / "lsp-capabilities.json").read_text())

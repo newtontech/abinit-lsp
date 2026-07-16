@@ -65,6 +65,11 @@ def _file_type(path: Path) -> str:
 
 
 def _collect_diagnostics(path: Path) -> list[Any]:
+    if path.is_file() and path.suffix.lower() in {".log", ".out"}:
+        from .log_parser import parse_log_file
+
+        return list(parse_log_file(path))
+
     from .lint import lint_path
 
     return list(lint_path(path))

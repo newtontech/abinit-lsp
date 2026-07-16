@@ -5,6 +5,21 @@ PYTHON_BIN="${PYTHON:-python3}"
 
 ran=0
 
+python_format_targets() {
+  local targets=""
+  [ -d src ] && targets="$targets src"
+  [ -d tests ] && targets="$targets tests"
+  [ -d test ] && targets="$targets test"
+  for d in *_lsp cp2k_input_tools mdparser gromacs_lsp; do
+    [ -d "$d" ] && targets="$targets $d"
+  done
+  if [ -z "${targets# }" ]; then
+    echo "."
+  else
+    echo "$targets"
+  fi
+}
+
 has_npm_script() {
   local script="$1"
   [ -f package.json ] || return 1

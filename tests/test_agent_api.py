@@ -144,7 +144,7 @@ class TestOpenqcSmoke:
     def test_returns_capability_status(self) -> None:
         result = openqc_smoke()
         assert result["software"] == "abinit"
-        assert result["version"] == "0.1.0"
+        assert result["version"] == "0.1.1"
         caps = result["capabilities"]
         assert caps["lint"] is True
         assert caps["hover"] is True

@@ -16,6 +16,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .code_actions import get_code_actions
 from .completion import ALL_KEYWORDS, KEYWORD_DOCS
 from .hover import get_hover_docs
@@ -130,7 +131,7 @@ def openqc_smoke() -> dict[str, Any]:
     manifest = get_rule_manifest()
     return {
         "software": SOFTWARE,
-        "version": "0.1.0",
+        "version": __version__,
         "capabilities": {
             "lint": True,
             "format": True,
