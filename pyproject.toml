@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "abinit-lsp"
-version = "0.1.0"
+version = "0.1.1"
 description = "Language Server Protocol and CLI tools for ABINIT input files"
 readme = "README.md"
 license = { text = "MIT" }
@@ -26,6 +26,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = [
+    "build>=1.2",
     "pytest>=7.0",
     "ruff>=0.4.0",
     "mypy>=1.8",
@@ -63,4 +64,3 @@ select = ["E", "F", "I", "B", "UP"]
 [tool.mypy]
 python_version = "3.10"
 strict = true
-

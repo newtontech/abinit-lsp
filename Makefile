@@ -1,4 +1,6 @@
-.PHONY: install format lint typecheck test check cleanup-merged
+.PHONY: install format lint typecheck test build smoke-wheel check cleanup-merged
+
+PYTHON ?= python3
 
 install:
 	bash scripts/install.sh
@@ -15,7 +17,14 @@ typecheck:
 test:
 	bash scripts/test.sh
 
-check: lint typecheck test
+build:
+	rm -rf build dist
+	$(PYTHON) -m build
+
+smoke-wheel: build
+	bash scripts/smoke_wheel.sh dist/*.whl
+
+check: lint typecheck test smoke-wheel
 
 cleanup-merged:
 	bash scripts/cleanup_merged_worktrees.sh

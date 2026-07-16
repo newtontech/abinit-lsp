@@ -13,6 +13,33 @@ abinit-fmt -w input.file
 abinit-test static ./case --json
 ```
 
+## Installation
+
+Current release: `0.1.1`
+
+Install the server and command-line tools from PyPI:
+
+```bash
+pip install abinit-lsp
+abinit-lsp --stdio
+```
+
+The `abinit-lsp-tool` agent CLI exposes JSON capabilities, checks, context,
+completion, hover, symbols, and non-destructive fix previews. Its `check`
+operation accepts ABINIT inputs and runtime `.out`/`.log` files.
+
+## Releases
+
+Releases use PyPI Trusted Publishing: a pushed `v*` tag starts the release
+workflow, which verifies that the tag matches `pyproject.toml`, builds and
+checks the distribution, and installs the wheel into a fresh virtual
+environment for server, agent, and fixture smoke tests. Only the protected
+`pypi` environment receives `id-token: write`; no long-lived PyPI token is
+stored.
+
+After this PR is merged and its release point is approved, create `v0.1.1` on
+the merge commit. Pull requests and ordinary branch pushes cannot publish.
+
 Diagnostic JSON uses the shared newtontech LSP shape: `file`, `line`, `column`, `severity`, `code`, `message`, `evidence`, `suggested_fix`, and `confidence`.
 
 ## Development

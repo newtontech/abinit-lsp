@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .lint import lint_path
 
 
@@ -87,7 +88,7 @@ def _handle_rpc(msg: dict[str, Any]) -> dict[str, Any] | None:
                 },
                 "serverInfo": {
                     "name": "abinit-lsp",
-                    "version": "0.1.0",
+                    "version": __version__,
                 },
             },
         }
